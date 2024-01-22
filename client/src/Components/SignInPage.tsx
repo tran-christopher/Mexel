@@ -1,4 +1,4 @@
-export function SignUpPage() {
+export function SignInPage() {
   return (
     <div>
       <form>
@@ -11,8 +11,8 @@ export function SignUpPage() {
         <input type="text" name="username" />
         <label htmlFor="password">Password</label>
         <input type="password" name="password" />
-        <button type="submit">Sign Up</button>
-        <p>Already have an account? Sign in here</p>
+        <button type="submit">Sign in</button>
+        <p>Don't have an account? Sign up here</p>
       </form>
     </div>
   );
