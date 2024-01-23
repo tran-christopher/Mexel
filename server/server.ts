@@ -2,6 +2,7 @@
 import 'dotenv/config';
 import express from 'express';
 import argon2 from 'argon2';
+import jwt from 'jsonwebtoken';
 import pg from 'pg';
 import {
   ClientError,
@@ -13,6 +14,11 @@ type User = {
   userId: number;
   username: string;
   hashedPassword: string;
+};
+
+type Auth = {
+  username: string;
+  password: string;
 };
 
 const connectionString =
@@ -39,7 +45,7 @@ app.use(express.json());
 const hashKey = process.env.TOKEN_SECRET;
 if (!hashKey) throw new Error('TOKEN_SECRET not found in .env');
 
-app.post('/api/sign-up', async (req, res) => {
+app.post('/api/sign-up', async (req, res, next) => {
   try {
     const { username, password } = req.body;
     if (!username || !password) {
@@ -55,6 +61,35 @@ app.post('/api/sign-up', async (req, res) => {
     const result = await db.query<User>(sql, params);
     const [user] = result.rows;
     res.status(201).json(user);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+app.post('/api/sign-in', async (req, res, next) => {
+  try {
+    const { username, password } = req.body as Partial<Auth>;
+    if (!username || !password) {
+      throw new ClientError(401, 'invalid login');
+    }
+    const sql = `
+        select "userId", "hashedPassword"
+        from "Users"
+        where "username" = $1
+        `;
+    const params = [username];
+    const result = await db.query<User>(sql, params);
+    const [user] = result.rows;
+    if (!user) {
+      throw new ClientError(401, 'invalid login');
+    }
+    const { userId, hashedPassword } = user;
+    if (!(await argon2.verify(hashedPassword, password))) {
+      throw new ClientError(401, 'invalid login');
+    }
+    const payload = { userId, username };
+    const token = jwt.sign(payload, hashKey);
+    res.json({ token, user: payload });
   } catch (error) {
     console.error(error);
   }

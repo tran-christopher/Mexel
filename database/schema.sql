@@ -8,7 +8,7 @@ create schema "public";
 
 CREATE TABLE "Users" (
   "username" text,
-  "password" text,
+  "hashedPassword" text,
   "userId" serial PRIMARY KEY
 );
 
