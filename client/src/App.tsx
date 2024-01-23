@@ -1,12 +1,14 @@
 import './App.css';
-import { SignInPage } from './Components/SignInPage';
-import { SignUpPage } from './Components/SignUpPage';
+import { AudioPlayer } from './Components/AudioPlayer/AudioPlayer';
+// import { SignInPage } from './Components/SignInPage';
+// import { SignUpPage } from './Components/SignUpPage';
 
 export default function App() {
   return (
     <div>
-      <SignUpPage />
-      <SignInPage />
+      {/* <SignUpPage />
+      <SignInPage /> */}
+      <AudioPlayer />
     </div>
   );
 }
