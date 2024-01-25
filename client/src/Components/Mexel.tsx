@@ -5,16 +5,19 @@ import { InputPage } from './InputPage';
 // import { LeftMenu } from './LeftMenu';
 // import { SavedSongs } from './SavedSongs';
 // import { SavedPlaylists } from './SavedPlaylists';
-// import { useState } from 'react';
-// import { SoundCloudStream, YouTubeStream } from 'play-dl';
-// import React from 'react';
+import { useState } from 'react';
+import React from 'react';
+import { default as _ReactPlayer } from 'react-player/lazy';
+import { ReactPlayerProps } from 'react-player/types/lib';
+const ReactPlayer = _ReactPlayer as unknown as React.FC<ReactPlayerProps>;
 
 export function Mexel() {
-  // const [source, setSource] = useState<YouTubeStream | SoundCloudStream>();
+  const [source, setSource] = useState('');
 
   async function getSong(linkToConvert: string) {
     try {
       console.log(`this is the link: ${linkToConvert}`);
+      console.log(typeof linkToConvert);
       const response = await fetch('/api/stream', {
         method: 'POST',
         headers: {
@@ -25,9 +28,8 @@ export function Mexel() {
       if (!response.ok) {
         throw new Error(`fetch error ${response.status}`);
       }
-      // const data = await response.json();
-      // setSource(data);
-      console.log(response);
+      const data = await response.json();
+      setSource(data);
     } catch (error) {
       console.error(error);
     }
@@ -38,6 +40,7 @@ export function Mexel() {
       {/* <SignUpPage />
       <SignInPage /> */}
       {/* <TestPlayer source={source} /> */}
+      <ReactPlayer url={source} />
       <InputPage onSubmit={getSong} />
       {/* <LeftMenu />
       <SavedSongs />

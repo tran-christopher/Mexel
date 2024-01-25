@@ -48,30 +48,16 @@ const hashKey = process.env.TOKEN_SECRET;
 if (!hashKey) throw new Error('TOKEN_SECRET not found in .env');
 
 // test link
-// https://www.youtube.com/watch?v=a0XEsck5ntk
-
-async function getYouTubeAudioURL(youtubeURL: string) {
-  try {
-    const video = await play.video_info(youtubeURL);
-    const stream = await play.stream_from_info(video);
-    return stream;
-  } catch (error) {
-    console.error('Error fetching audio URL:', error);
-  }
-}
-// calling to see console object
-// getYouTubeAudioURL('https://www.youtube.com/watch?v=a0XEsck5ntk');
+// http://www.youtube.com/watch?v=a0XEsck5ntk
 
 app.post('/api/stream', async (req, res, next) => {
   try {
     const linkToConvert = req.body;
-    console.log(linkToConvert);
+    console.log(`api is working`);
     if (!linkToConvert) {
       throw new ClientError(400, 'please provide a valid link');
     }
-    const result = await getYouTubeAudioURL(linkToConvert);
-    console.log(result);
-    res.send(result);
+    res.status(201).json(linkToConvert);
   } catch (error) {
     console.error(error);
   }
