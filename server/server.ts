@@ -9,6 +9,7 @@ import {
   defaultMiddleware,
   errorMiddleware,
 } from './lib/index.js';
+import play from 'play-dl';
 
 type User = {
   userId: number;
@@ -44,6 +45,21 @@ app.use(express.json());
 
 const hashKey = process.env.TOKEN_SECRET;
 if (!hashKey) throw new Error('TOKEN_SECRET not found in .env');
+
+// test link
+// https://www.youtube.com/watch?v=a0XEsck5ntk
+
+app.post('/api/stream', async (req, res, next) => {
+  try {
+    const { linkToConvert } = req.body;
+    if (!linkToConvert) {
+      throw new ClientError(400, 'please provide a valid link');
+    }
+    console.log(req.body);
+  } catch (error) {
+    console.error(error);
+  }
+});
 
 app.post('/api/sign-up', async (req, res, next) => {
   try {
@@ -90,6 +106,17 @@ app.post('/api/sign-in', async (req, res, next) => {
     const payload = { userId, username };
     const token = jwt.sign(payload, hashKey);
     res.json({ token, user: payload });
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+app.put('/api/stream', async (req, res, next) => {
+  try {
+    const test = await play.stream(
+      'https://www.youtube.com/watch?v=a0XEsck5ntk'
+    );
+    return test;
   } catch (error) {
     console.error(error);
   }

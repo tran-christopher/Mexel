@@ -1,14 +1,10 @@
 import './App.css';
-import { AudioPlayer } from './Components/AudioPlayer/AudioPlayer';
-// import { SignInPage } from './Components/SignInPage';
-// import { SignUpPage } from './Components/SignUpPage';
+import { Mexel } from './Components/Mexel';
 
 export default function App() {
   return (
     <div>
-      {/* <SignUpPage />
-      <SignInPage /> */}
-      <AudioPlayer />
+      <Mexel />
     </div>
   );
 }
