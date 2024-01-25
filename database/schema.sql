@@ -16,7 +16,7 @@ CREATE TABLE "Songs" (
   "songId" serial PRIMARY KEY,
   "userId" integer,
   "title" text,
-  "duration" integer
+  "url" text
 );
 
 CREATE TABLE "Playlists" (

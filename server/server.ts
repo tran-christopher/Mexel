@@ -42,6 +42,7 @@ app.use(express.static(reactStaticDir));
 // Static directory for file uploads server/public/
 app.use(express.static(uploadsStaticDir));
 app.use(express.json());
+app.use(express.text({ type: 'text/plain' }));
 
 const hashKey = process.env.TOKEN_SECRET;
 if (!hashKey) throw new Error('TOKEN_SECRET not found in .env');
@@ -53,23 +54,24 @@ async function getYouTubeAudioURL(youtubeURL: string) {
   try {
     const video = await play.video_info(youtubeURL);
     const stream = await play.stream_from_info(video);
-    console.log(stream);
     return stream;
   } catch (error) {
     console.error('Error fetching audio URL:', error);
-    return null;
   }
 }
-
-getYouTubeAudioURL('https://www.youtube.com/watch?v=a0XEsck5ntk');
+// calling to see console object
+// getYouTubeAudioURL('https://www.youtube.com/watch?v=a0XEsck5ntk');
 
 app.post('/api/stream', async (req, res, next) => {
   try {
-    const { linkToConvert } = req.body;
+    const linkToConvert = req.body;
+    console.log(linkToConvert);
     if (!linkToConvert) {
       throw new ClientError(400, 'please provide a valid link');
     }
-    console.log(`this is the body: ${req.body}`);
+    const result = await getYouTubeAudioURL(linkToConvert);
+    console.log(result);
+    res.send(result);
   } catch (error) {
     console.error(error);
   }
