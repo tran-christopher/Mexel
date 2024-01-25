@@ -49,13 +49,27 @@ if (!hashKey) throw new Error('TOKEN_SECRET not found in .env');
 // test link
 // https://www.youtube.com/watch?v=a0XEsck5ntk
 
+async function getYouTubeAudioURL(youtubeURL: string) {
+  try {
+    const video = await play.video_info(youtubeURL);
+    const stream = await play.stream_from_info(video);
+    console.log(stream);
+    return stream;
+  } catch (error) {
+    console.error('Error fetching audio URL:', error);
+    return null;
+  }
+}
+
+getYouTubeAudioURL('https://www.youtube.com/watch?v=a0XEsck5ntk');
+
 app.post('/api/stream', async (req, res, next) => {
   try {
     const { linkToConvert } = req.body;
     if (!linkToConvert) {
       throw new ClientError(400, 'please provide a valid link');
     }
-    console.log(req.body);
+    console.log(`this is the body: ${req.body}`);
   } catch (error) {
     console.error(error);
   }
