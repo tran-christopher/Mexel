@@ -21,10 +21,6 @@ type Auth = {
   password: string;
 };
 
-type Link = {
-  linkToConvert: string;
-};
-
 const connectionString =
   process.env.DATABASE_URL ||
   `postgresql://${process.env.RDS_USERNAME}:${process.env.RDS_PASSWORD}@${process.env.RDS_HOSTNAME}:${process.env.RDS_PORT}/${process.env.RDS_DB_NAME}`;
@@ -89,6 +85,7 @@ app.post('/api/sign-in', async (req, res, next) => {
       throw new ClientError(401, 'invalid login');
     }
     const { userId, hashedPassword } = user;
+
     if (!(await argon2.verify(hashedPassword, password))) {
       throw new ClientError(401, 'invalid login');
     }

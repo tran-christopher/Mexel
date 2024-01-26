@@ -1,11 +1,10 @@
 import { SignInPage } from './SignInPage';
 import { SignUpPage } from './SignUpPage';
-// import { TestPlayer } from './TestPlayer';
 import { InputPage } from './InputPage';
 // import { LeftMenu } from './LeftMenu';
 // import { SavedSongs } from './SavedSongs';
 // import { SavedPlaylists } from './SavedPlaylists';
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import React from 'react';
 import { default as _ReactPlayer } from 'react-player/lazy';
 import { ReactPlayerProps } from 'react-player/types/lib';
@@ -35,16 +34,23 @@ export function Mexel() {
     }
   }
 
+  function handleSignOut(event: FormEvent) {
+    event.preventDefault();
+    localStorage.clear();
+  }
+
   return (
     <div>
       <SignUpPage />
       <SignInPage />
-      {/* <TestPlayer source={source} /> */}
       <ReactPlayer url={source} />
       <InputPage onSubmit={getSong} />
       {/* <LeftMenu />
       <SavedSongs />
       <SavedPlaylists /> */}
+      <form onSubmit={handleSignOut}>
+        <button type="submit">Sign out</button>
+      </form>
     </div>
   );
 }
