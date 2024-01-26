@@ -2,6 +2,7 @@ import { FormEvent, useState } from 'react';
 
 type InputPageProps = {
   onSubmit: (link: string) => void;
+  // onSubmitTwo: (link: string) => void;
 };
 
 export function InputPage({ onSubmit }: InputPageProps) {

@@ -21,6 +21,12 @@ type Auth = {
   password: string;
 };
 
+type Song = {
+  url: string;
+  title: string;
+  userId: number;
+};
+
 const connectionString =
   process.env.DATABASE_URL ||
   `postgresql://${process.env.RDS_USERNAME}:${process.env.RDS_PASSWORD}@${process.env.RDS_HOSTNAME}:${process.env.RDS_PORT}/${process.env.RDS_DB_NAME}`;
@@ -85,7 +91,6 @@ app.post('/api/sign-in', async (req, res, next) => {
       throw new ClientError(401, 'invalid login');
     }
     const { userId, hashedPassword } = user;
-
     if (!(await argon2.verify(hashedPassword, password))) {
       throw new ClientError(401, 'invalid login');
     }
@@ -100,7 +105,7 @@ app.post('/api/sign-in', async (req, res, next) => {
 // test link
 // http://www.youtube.com/watch?v=a0XEsck5ntk
 
-app.post('/api/stream', async (req, res, next) => {
+app.post('/api/video', async (req, res, next) => {
   try {
     const linkToConvert = req.body;
     if (!linkToConvert) {
@@ -116,6 +121,41 @@ app.post('/api/stream', async (req, res, next) => {
     const [song] = result.rows;
     // res.status(201).json(song[0].url);
     res.status(201).json(linkToConvert);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+app.post('/api/title', async (req, res, next) => {
+  try {
+    console.log(req.body);
+    const { url, userId } = req.body;
+    if (!url) {
+      throw new ClientError(400, 'please provide a valid link');
+    }
+    const getId = url.split('=');
+    const infoObject = await fetch(
+      `https://youtube.googleapis.com/youtube/v3/videos?part=snippet&id=${getId[1]}&key=${process.env.YOUTUBE_API_KEY}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    if (!infoObject) {
+      throw new Error(`google api fetch error `);
+    }
+    const data = await infoObject.json();
+    const sql = `
+          insert into "Songs" ("url", "title", "userId")
+          values ($1, $2, $3)
+          returning *
+          `;
+    const params = [url, data.items[0].snippet.title, userId];
+    const result = await db.query<Song>(sql, params);
+    console.log(`Song added: ${result.rows}`);
+    res.status(201).json(url);
   } catch (error) {
     console.error(error);
   }

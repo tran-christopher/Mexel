@@ -13,16 +13,24 @@ const ReactPlayer = _ReactPlayer as unknown as React.FC<ReactPlayerProps>;
 export function Mexel() {
   const [source, setSource] = useState('');
 
-  async function getSong(linkToConvert: string) {
+  async function getSongAndTitle(linkToConvert: string) {
     try {
+      const Song = {
+        userId: '',
+        url: '',
+        title: '',
+      };
       console.log(`this is the link: ${linkToConvert}`);
-      console.log(typeof linkToConvert);
-      const response = await fetch('/api/stream', {
+      const userId = localStorage.getItem('user signed in');
+      Song.userId =
+        userId !== null ? userId : 'userId was not captured as expected';
+      Song.url = linkToConvert;
+      const response = await fetch('/api/title', {
         method: 'POST',
         headers: {
-          'Content-Type': 'text/plain',
+          'Content-Type': 'application/json',
         },
-        body: linkToConvert,
+        body: JSON.stringify(Song),
       });
       if (!response.ok) {
         throw new Error(`fetch error ${response.status}`);
@@ -44,7 +52,7 @@ export function Mexel() {
       <SignUpPage />
       <SignInPage />
       <ReactPlayer url={source} />
-      <InputPage onSubmit={getSong} />
+      <InputPage onSubmit={getSongAndTitle} />
       {/* <LeftMenu />
       <SavedSongs />
       <SavedPlaylists /> */}
