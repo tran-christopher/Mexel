@@ -1,5 +1,5 @@
-// import { SignInPage } from './SignInPage';
-// import { SignUpPage } from './SignUpPage';
+import { SignInPage } from './SignInPage';
+import { SignUpPage } from './SignUpPage';
 // import { TestPlayer } from './TestPlayer';
 import { InputPage } from './InputPage';
 // import { LeftMenu } from './LeftMenu';
@@ -37,8 +37,8 @@ export function Mexel() {
 
   return (
     <div>
-      {/* <SignUpPage />
-      <SignInPage /> */}
+      <SignUpPage />
+      <SignInPage />
       {/* <TestPlayer source={source} /> */}
       <ReactPlayer url={source} />
       <InputPage onSubmit={getSong} />

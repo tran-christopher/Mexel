@@ -9,7 +9,6 @@ import {
   defaultMiddleware,
   errorMiddleware,
 } from './lib/index.js';
-import play from 'play-dl';
 
 type User = {
   userId: number;
@@ -20,6 +19,10 @@ type User = {
 type Auth = {
   username: string;
   password: string;
+};
+
+type Link = {
+  linkToConvert: string;
 };
 
 const connectionString =
@@ -46,22 +49,6 @@ app.use(express.text({ type: 'text/plain' }));
 
 const hashKey = process.env.TOKEN_SECRET;
 if (!hashKey) throw new Error('TOKEN_SECRET not found in .env');
-
-// test link
-// http://www.youtube.com/watch?v=a0XEsck5ntk
-
-app.post('/api/stream', async (req, res, next) => {
-  try {
-    const linkToConvert = req.body;
-    console.log(`api is working`);
-    if (!linkToConvert) {
-      throw new ClientError(400, 'please provide a valid link');
-    }
-    res.status(201).json(linkToConvert);
-  } catch (error) {
-    console.error(error);
-  }
-});
 
 app.post('/api/sign-up', async (req, res, next) => {
   try {
@@ -113,12 +100,25 @@ app.post('/api/sign-in', async (req, res, next) => {
   }
 });
 
-app.put('/api/stream', async (req, res, next) => {
+// test link
+// http://www.youtube.com/watch?v=a0XEsck5ntk
+
+app.post('/api/stream', async (req, res, next) => {
   try {
-    const test = await play.stream(
-      'https://www.youtube.com/watch?v=a0XEsck5ntk'
-    );
-    return test;
+    const linkToConvert = req.body;
+    if (!linkToConvert) {
+      throw new ClientError(400, 'please provide a valid link');
+    }
+    const sql = `
+          insert into "Songs" ("url")
+          values ($1)
+          returning *
+          `;
+    const params = [linkToConvert];
+    const result = await db.query(sql, params);
+    const [song] = result.rows;
+    // res.status(201).json(song[0].url);
+    res.status(201).json(linkToConvert);
   } catch (error) {
     console.error(error);
   }
