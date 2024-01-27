@@ -107,28 +107,6 @@ app.post('/api/sign-in', async (req, res, next) => {
 
 app.post('/api/video', async (req, res, next) => {
   try {
-    const linkToConvert = req.body;
-    if (!linkToConvert) {
-      throw new ClientError(400, 'please provide a valid link');
-    }
-    const sql = `
-          insert into "Songs" ("url")
-          values ($1)
-          returning *
-          `;
-    const params = [linkToConvert];
-    const result = await db.query(sql, params);
-    const [song] = result.rows;
-    // res.status(201).json(song[0].url);
-    res.status(201).json(linkToConvert);
-  } catch (error) {
-    console.error(error);
-  }
-});
-
-app.post('/api/title', async (req, res, next) => {
-  try {
-    console.log(req.body);
     const { url, userId } = req.body;
     if (!url) {
       throw new ClientError(400, 'please provide a valid link');
@@ -147,18 +125,30 @@ app.post('/api/title', async (req, res, next) => {
       throw new Error(`google api fetch error `);
     }
     const data = await infoObject.json();
+    const videoData = [url, data.items[0].snippet.title, userId];
+    res.status(201).json(videoData);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+app.post('/api/save', async (req, res, next) => {
+  try {
+    const [url, title, userId] = req.body;
+    if (!url || !title || !userId) {
+      throw new Error('unable to retrieve video data from fetch');
+    }
     const sql = `
           insert into "Songs" ("url", "title", "userId")
           values ($1, $2, $3)
           returning *
           `;
-    const params = [url, data.items[0].snippet.title, userId];
+    const params = [url, title, userId];
     const result = await db.query<Song>(sql, params);
-    console.log(`Song added: ${result.rows}`);
-    res.status(201).json(url);
-  } catch (error) {
-    console.error(error);
-  }
+    const [newVideo] = result.rows;
+    res.status(201).json(newVideo);
+    console.log('Video added!');
+  } catch (error) {}
 });
 
 /*
