@@ -202,7 +202,7 @@ app.post('/api/get-all-playlists', async (req, res, next) => {
     const sql = `
           select *
           from "Playlists"
-          where userId = $1
+          where "userId" = $1
           `;
     const params = [userId];
     const result = await db.query(sql, params);
