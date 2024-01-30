@@ -18,7 +18,15 @@ export function PlaylistInputPage({ onSubmit }: PlaylistInputPageProps) {
     <div>
       <form onSubmit={handleCreate}>
         <p>Create a playlist here</p>
-        <input required type="text" placeholder="playlist name here" />
+        <input
+          required
+          type="text"
+          placeholder="playlist name here"
+          value={name}
+          onChange={(e) => {
+            setName(e.target.value);
+          }}
+        />
         <button type="submit">Save</button>
       </form>
     </div>

@@ -15,7 +15,7 @@ const ReactPlayer = _ReactPlayer as unknown as React.FC<ReactPlayerProps>;
 export function Mexel() {
   const [source, setSource] = useState('');
   const [video, setVideo] = useState({});
-  const [playlist, setPlaylist] = useState({});
+  const [playlistName, setPlaylistName] = useState({});
   const [allSongs, setAllSongs] = useState([]);
   const [allPlaylists, setAllPlaylists] = useState([]);
 
@@ -56,11 +56,11 @@ export function Mexel() {
         title: '',
         userId: '',
       };
-      console.log(`this is the playlist name`);
       const userId = localStorage.getItem('user signed in');
       playlist.userId =
         userId !== null ? userId : 'userId was not captured as expected';
       playlist.title = playlistName;
+      console.log(`this is the playlist name ${JSON.stringify(playlist)}`);
       const response = await fetch('/api/create-playlist', {
         method: 'POST',
         headers: {
@@ -72,7 +72,8 @@ export function Mexel() {
         throw new Error(`fetch error ${response.status}`);
       }
       const data = await response.json();
-      setPlaylist(data);
+      setPlaylistName(data);
+      console.log(playlistName);
     } catch (error) {
       console.error(error);
     }
