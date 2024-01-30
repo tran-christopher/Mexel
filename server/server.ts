@@ -105,7 +105,7 @@ app.post('/api/sign-in', async (req, res, next) => {
 // test link
 // http://www.youtube.com/watch?v=a0XEsck5ntk
 
-app.post('/api/video', async (req, res, next) => {
+app.get('/api/video', async (req, res, next) => {
   try {
     const { url, userId } = req.body;
     if (!url) {
@@ -132,6 +132,27 @@ app.post('/api/video', async (req, res, next) => {
   }
 });
 
+app.post('/api/create-playlist', async (req, res, next) => {
+  try {
+    const { title, userId } = req.body;
+    if (!title || !userId) {
+      throw new ClientError(400, 'invalid playlist name or not signed in');
+    }
+    const sql = `
+          insert into "Playlists" ("title", "userId")
+          values ($1, $2)
+          returning *
+          `;
+    const params = [title, userId];
+    const result = await db.query(sql, params);
+    const [newPlaylist] = result.rows;
+    res.status(201).json(newPlaylist);
+    console.log('Playlist added!');
+  } catch (error) {
+    console.error(error);
+  }
+});
+
 app.post('/api/save', async (req, res, next) => {
   try {
     const [url, title, userId] = req.body;
@@ -149,6 +170,48 @@ app.post('/api/save', async (req, res, next) => {
     res.status(201).json(newVideo);
     console.log('Video added!');
   } catch (error) {}
+});
+
+app.post('/api/get-all-songs', async (req, res, next) => {
+  try {
+    const [userId] = req.body;
+    if (!userId) {
+      throw new Error('not signed in');
+    }
+    const sql = `
+          select *
+          from "Songs"
+          where "userId" = $1
+          `;
+    const params = [userId];
+    const result = await db.query(sql, params);
+    const allSongs = result.rows;
+    res.status(201).json(allSongs);
+    console.log(`All songs for userId:${userId} retrieved!`);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+app.post('/api/get-all-playlists', async (req, res, next) => {
+  try {
+    const [userId] = req.body;
+    if (!userId) {
+      throw new Error('not signed in');
+    }
+    const sql = `
+          select *
+          from "Playlists"
+          where userId = $1
+          `;
+    const params = [userId];
+    const result = await db.query(sql, params);
+    const allPlaylists = result.rows;
+    res.status(201).json(allPlaylists);
+    console.log(`All playlists for userId:${userId} retrieved!`);
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 /*
