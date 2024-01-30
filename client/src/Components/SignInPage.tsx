@@ -16,6 +16,7 @@ export function SignInPage() {
         throw new Error(`fetch error ${response.status}`);
       }
       const user = await response.json();
+      localStorage.setItem('user signed in', `${user.user.userId}`);
       console.log(`Signed in: ${JSON.stringify(user)}`);
     } catch (error) {
       console.error(error);

@@ -21,6 +21,12 @@ type Auth = {
   password: string;
 };
 
+type Song = {
+  url: string;
+  title: string;
+  userId: number;
+};
+
 const connectionString =
   process.env.DATABASE_URL ||
   `postgresql://${process.env.RDS_USERNAME}:${process.env.RDS_PASSWORD}@${process.env.RDS_HOSTNAME}:${process.env.RDS_PORT}/${process.env.RDS_DB_NAME}`;
@@ -41,6 +47,7 @@ app.use(express.static(reactStaticDir));
 // Static directory for file uploads server/public/
 app.use(express.static(uploadsStaticDir));
 app.use(express.json());
+app.use(express.text({ type: 'text/plain' }));
 
 const hashKey = process.env.TOKEN_SECRET;
 if (!hashKey) throw new Error('TOKEN_SECRET not found in .env');
@@ -90,6 +97,118 @@ app.post('/api/sign-in', async (req, res, next) => {
     const payload = { userId, username };
     const token = jwt.sign(payload, hashKey);
     res.json({ token, user: payload });
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+// test link
+// http://www.youtube.com/watch?v=a0XEsck5ntk
+
+app.get('/api/video', async (req, res, next) => {
+  try {
+    const { url, userId } = req.body;
+    if (!url) {
+      throw new ClientError(400, 'please provide a valid link');
+    }
+    const getId = url.split('=');
+    const infoObject = await fetch(
+      `https://youtube.googleapis.com/youtube/v3/videos?part=snippet&id=${getId[1]}&key=${process.env.YOUTUBE_API_KEY}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    if (!infoObject) {
+      throw new Error(`google api fetch error `);
+    }
+    const data = await infoObject.json();
+    const videoData = [url, data.items[0].snippet.title, userId];
+    res.status(201).json(videoData);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+app.post('/api/create-playlist', async (req, res, next) => {
+  try {
+    const { title, userId } = req.body;
+    if (!title || !userId) {
+      throw new ClientError(400, 'invalid playlist name or not signed in');
+    }
+    const sql = `
+          insert into "Playlists" ("title", "userId")
+          values ($1, $2)
+          returning *
+          `;
+    const params = [title, userId];
+    const result = await db.query(sql, params);
+    const [newPlaylist] = result.rows;
+    res.status(201).json(newPlaylist);
+    console.log('Playlist added!');
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+app.post('/api/save', async (req, res, next) => {
+  try {
+    const [url, title, userId] = req.body;
+    if (!url || !title || !userId) {
+      throw new Error('unable to retrieve video data from fetch');
+    }
+    const sql = `
+          insert into "Songs" ("url", "title", "userId")
+          values ($1, $2, $3)
+          returning *
+          `;
+    const params = [url, title, userId];
+    const result = await db.query<Song>(sql, params);
+    const [newVideo] = result.rows;
+    res.status(201).json(newVideo);
+    console.log('Video added!');
+  } catch (error) {}
+});
+
+app.post('/api/get-all-songs', async (req, res, next) => {
+  try {
+    const [userId] = req.body;
+    if (!userId) {
+      throw new Error('not signed in');
+    }
+    const sql = `
+          select *
+          from "Songs"
+          where "userId" = $1
+          `;
+    const params = [userId];
+    const result = await db.query(sql, params);
+    const allSongs = result.rows;
+    res.status(201).json(allSongs);
+    console.log(`All songs for userId:${userId} retrieved!`);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+app.post('/api/get-all-playlists', async (req, res, next) => {
+  try {
+    const [userId] = req.body;
+    if (!userId) {
+      throw new Error('not signed in');
+    }
+    const sql = `
+          select *
+          from "Playlists"
+          where userId = $1
+          `;
+    const params = [userId];
+    const result = await db.query(sql, params);
+    const allPlaylists = result.rows;
+    res.status(201).json(allPlaylists);
+    console.log(`All playlists for userId:${userId} retrieved!`);
   } catch (error) {
     console.error(error);
   }
