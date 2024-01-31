@@ -98,6 +98,13 @@ export function Mexel() {
     }
   }
 
+  async function saveSongToPlaylist() {
+    try {
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   async function getAllSongs() {
     try {
       setAllSongs([]);
@@ -175,6 +182,7 @@ export function Mexel() {
                   setSource(url);
                   navigate('/player');
                 }}
+                handleSave={() => {}}
                 allSongsArray={allSongs}
               />
             }

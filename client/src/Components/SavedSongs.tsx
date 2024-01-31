@@ -11,9 +11,10 @@ type Song = {
 type SavedSongsProps = {
   allSongsArray: Song[];
   handleSource: (url) => void;
+  handleSave: (Id) => void;
 };
 
-export function SavedSongs({ handleSource }: SavedSongsProps) {
+export function SavedSongs({ handleSource, handleSave }: SavedSongsProps) {
   const { allSongs } = useUser();
   const allSongsTwo = allSongs.map((song) => {
     return (
@@ -22,6 +23,9 @@ export function SavedSongs({ handleSource }: SavedSongsProps) {
           title={song.title}
           onClick={() => {
             handleSource(song.url);
+          }}
+          onSave={() => {
+            handleSave(song.songId);
           }}
         />
       </li>

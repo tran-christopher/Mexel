@@ -172,6 +172,27 @@ app.post('/api/save', async (req, res, next) => {
   } catch (error) {}
 });
 
+app.post('/api/save-to-playlist', async (req, res, next) => {
+  try {
+    const [songId] = req.body;
+    if (!songId) {
+      throw new Error('song is not saved!');
+    }
+    const sql = `
+          insert into "PlaylistSongs" ("songId")
+          values ($1)
+          returning *
+          `;
+    const params = [songId];
+    const result = await db.query(sql, params);
+    const [savedSong] = result.rows;
+    res.status(201).json(savedSong);
+    console.log('video added to playlist!');
+  } catch (error) {
+    console.error(error);
+  }
+});
+
 app.post('/api/get-all-songs', async (req, res, next) => {
   try {
     const [userId] = req.body;
