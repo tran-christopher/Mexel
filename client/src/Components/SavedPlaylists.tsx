@@ -10,12 +10,7 @@ type SavedPlaylistsProps = {
 
 export function SavedPlaylists({ allPlaylistsArray }: SavedPlaylistsProps) {
   const allPlaylists = allPlaylistsArray.map((playlist) => {
-    return (
-      <li key={playlist.playlistId}>
-        {playlist.title}
-        <button>Save to playlist</button>
-      </li>
-    );
+    return <li key={playlist.playlistId}>{playlist.title}</li>;
   });
   return (
     <div>

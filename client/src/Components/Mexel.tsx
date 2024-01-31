@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import { SignInPage } from './SignInPage';
 import { SignUpPage } from './SignUpPage';
 import { InputPage } from './InputPage';
@@ -6,18 +6,17 @@ import { Save } from './Save';
 import { LeftMenu } from './LeftMenu';
 import { SavedSongs } from './SavedSongs';
 import { SavedPlaylists } from './SavedPlaylists';
-import { useState } from 'react';
-import React from 'react';
-import { default as _ReactPlayer } from 'react-player/lazy';
-import { ReactPlayerProps } from 'react-player/types/lib';
 import { PlaylistInputPage } from './PlaylistInputPage';
-const ReactPlayer = _ReactPlayer as unknown as React.FC<ReactPlayerProps>;
+import { MediaPlayer } from './MediaPlayer';
+import { useState } from 'react';
+import { UserProvider, VideoData } from './AppContext';
 
 export function Mexel() {
+  const navigate = useNavigate();
   const [source, setSource] = useState('');
   const [video, setVideo] = useState({});
   const [newPlaylistName, setNewPlaylistName] = useState({});
-  const [allSongs, setAllSongs] = useState([]);
+  const [allSongs, setAllSongs] = useState<VideoData[]>([]);
   const [allPlaylists, setAllPlaylists] = useState([]);
 
   async function getSongAndTitle(linkToConvert: string) {
@@ -147,34 +146,45 @@ export function Mexel() {
     }
   }
 
+  const contextValue = { allSongs };
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={
-          <LeftMenu
-            handlePlaylists={getAllPlaylists}
-            handleSongs={getAllSongs}
+    <UserProvider value={contextValue}>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <LeftMenu
+              handlePlaylists={getAllPlaylists}
+              handleSongs={getAllSongs}
+            />
+          }>
+          <Route path="/sign-up" element={<SignUpPage />} />
+          <Route path="/sign-in" element={<SignInPage />} />
+          <Route path="/player" element={<MediaPlayer url={source} />} />
+          <Route index element={<InputPage onSubmit={getSongAndTitle} />} />
+          <Route path="/save" element={<Save onSave={saveSongAndTitle} />} />
+          <Route
+            path="/save-playlist"
+            element={<PlaylistInputPage onSubmit={createPlaylist} />}
           />
-        }>
-        <Route path="/sign-up" element={<SignUpPage />} />
-        <Route path="/sign-in" element={<SignInPage />} />
-        <Route path="/player" element={<ReactPlayer controls url={source} />} />
-        <Route index element={<InputPage onSubmit={getSongAndTitle} />} />
-        <Route path="/save" element={<Save onSave={saveSongAndTitle} />} />
-        <Route
-          path="/save-playlist"
-          element={<PlaylistInputPage onSubmit={createPlaylist} />}
-        />
-        <Route
-          path="/saved-songs"
-          element={<SavedSongs allSongsArray={allSongs} />}
-        />
-        <Route
-          path="/saved-playlists"
-          element={<SavedPlaylists allPlaylistsArray={allPlaylists} />}
-        />
-      </Route>
-    </Routes>
+          <Route
+            path="/saved-songs"
+            element={
+              <SavedSongs
+                handleSource={(url) => {
+                  setSource(url);
+                  navigate('/player');
+                }}
+                allSongsArray={allSongs}
+              />
+            }
+          />
+          <Route
+            path="/saved-playlists"
+            element={<SavedPlaylists allPlaylistsArray={allPlaylists} />}
+          />
+        </Route>
+      </Routes>
+    </UserProvider>
   );
 }
