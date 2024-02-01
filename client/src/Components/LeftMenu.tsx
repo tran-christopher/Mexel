@@ -1,14 +1,26 @@
-export function LeftMenu() {
+import { Link, Outlet } from 'react-router-dom';
+
+type LeftMenuProps = {
+  handleSongs: () => void;
+  handlePlaylists: () => void;
+};
+
+export function LeftMenu({ handleSongs, handlePlaylists }: LeftMenuProps) {
   return (
     <div>
-      <h1>Home</h1>
-      <h2>Add a Song</h2>
+      <Link to="/">Home</Link>
+      <Link to="/sign-in">Login</Link>
+      <Link to="/sign-up">Sign up</Link>
       <div>
-        <h3>Library</h3>
-        <p>Search</p>
-        <p>All songs</p>
-        <p>Playlists</p>
+        <p>Library</p>
+        <Link onClick={handleSongs} to="/saved-songs">
+          All songs
+        </Link>
+        <Link onClick={handlePlaylists} to="/saved-playlists">
+          Playlists
+        </Link>
       </div>
+      <Outlet />
     </div>
   );
 }

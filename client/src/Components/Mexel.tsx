@@ -1,23 +1,29 @@
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import { SignInPage } from './SignInPage';
 import { SignUpPage } from './SignUpPage';
 import { InputPage } from './InputPage';
-import { Save } from './Save';
-// import { LeftMenu } from './LeftMenu';
+import { LeftMenu } from './LeftMenu';
 import { SavedSongs } from './SavedSongs';
 import { SavedPlaylists } from './SavedPlaylists';
-import { FormEvent, useState } from 'react';
-import React from 'react';
-import { default as _ReactPlayer } from 'react-player/lazy';
-import { ReactPlayerProps } from 'react-player/types/lib';
 import { PlaylistInputPage } from './PlaylistInputPage';
-const ReactPlayer = _ReactPlayer as unknown as React.FC<ReactPlayerProps>;
+import { MediaPlayer } from './MediaPlayer';
+import { useEffect, useState } from 'react';
+import { UserProvider, VideoData } from './AppContext';
+import { DisplayPlaylists } from './DisplayPlaylist';
 
 export function Mexel() {
+  const navigate = useNavigate();
   const [source, setSource] = useState('');
   const [video, setVideo] = useState({});
-  const [playlist, setPlaylist] = useState({});
-  const [allSongs, setAllSongs] = useState([]);
+  const [newPlaylistName, setNewPlaylistName] = useState({});
+  const [allSongs, setAllSongs] = useState<VideoData[]>([]);
   const [allPlaylists, setAllPlaylists] = useState([]);
+  const [henry, setHenry] = useState(0);
+  const [displayPlaylist, setDisplayPlaylist] = useState([]);
+
+  useEffect(() => {
+    console.log(displayPlaylist), [displayPlaylist];
+  });
 
   async function getSongAndTitle(linkToConvert: string) {
     try {
@@ -26,13 +32,12 @@ export function Mexel() {
         url: '',
         title: '',
       };
-      console.log(`this is the link: ${linkToConvert}`);
       const userId = localStorage.getItem('user signed in');
       song.userId =
         userId !== null ? userId : 'userId was not captured as expected';
       song.url = linkToConvert;
       const response = await fetch('/api/video', {
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -42,9 +47,9 @@ export function Mexel() {
         throw new Error(`fetch error ${response.status}`);
       }
       const data = await response.json();
-      console.log(data);
       setSource(data[0]);
       setVideo(data);
+      navigate('/player');
     } catch (error) {
       console.error(error);
     }
@@ -56,7 +61,6 @@ export function Mexel() {
         title: '',
         userId: '',
       };
-      console.log(`this is the playlist name`);
       const userId = localStorage.getItem('user signed in');
       playlist.userId =
         userId !== null ? userId : 'userId was not captured as expected';
@@ -72,7 +76,8 @@ export function Mexel() {
         throw new Error(`fetch error ${response.status}`);
       }
       const data = await response.json();
-      setPlaylist(data);
+      setNewPlaylistName(data);
+      console.log(`Playlist created: ${newPlaylistName}`);
     } catch (error) {
       console.error(error);
     }
@@ -97,11 +102,45 @@ export function Mexel() {
     }
   }
 
+  async function selectPlaylistToSave(songId) {
+    setHenry(songId);
+    navigate('/saved-playlists');
+    try {
+      getAllPlaylists();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function saveSongToPlaylist(songId, playlistId) {
+    try {
+      const reqObject = {
+        songId,
+        playlistId,
+      };
+      const response = await fetch('/api/saving-to-playlists', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reqObject),
+      });
+      if (!response.ok) {
+        throw new Error(`fetch error ${response.status}`);
+      }
+      const data = await response.json();
+      console.log(`Saved to database ${JSON.stringify(data)}`);
+      alert(`Saved to playlist!`);
+      navigate('/saved-songs');
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   async function getAllSongs() {
     try {
+      setAllSongs([]);
       const userId = localStorage.getItem('user signed in');
-      console.log(userId);
-      console.log(typeof userId);
       const response = await fetch('/api/get-all-songs', {
         method: 'POST',
         headers: {
@@ -113,7 +152,7 @@ export function Mexel() {
         throw new Error(`fetch error ${response.status}`);
       }
       const data = await response.json();
-      console.log(`songs retrieved, wowow! ${JSON.stringify(data)}`);
+      console.log(`Saved videos retrieved ${JSON.stringify(data)}`);
       setAllSongs(data);
     } catch (error) {
       console.error(error);
@@ -122,6 +161,7 @@ export function Mexel() {
 
   async function getAllPlaylists() {
     try {
+      setAllPlaylists([]);
       const userId = localStorage.getItem('user signed in');
       const response = await fetch('/api/get-all-playlists', {
         method: 'POST',
@@ -138,30 +178,100 @@ export function Mexel() {
         `playlists retrieved congratulations! ${JSON.stringify(data)}`
       );
       setAllPlaylists(data);
+      console.log(data);
     } catch (error) {
       console.error(error);
     }
   }
 
-  function handleSignOut(event: FormEvent) {
-    event.preventDefault();
-    localStorage.clear();
+  async function displaySelectedPlaylist(Id) {
+    try {
+      setDisplayPlaylist([]);
+      const response = await fetch('/api/display-selected-playlist', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain',
+        },
+        body: Id,
+      });
+      if (!response.ok) {
+        throw new Error(`fetch error ${response.status}`);
+      }
+      const data = await response.json();
+      setDisplayPlaylist(data);
+      navigate('/display-playlist');
+    } catch (error) {
+      console.error(error);
+    }
   }
 
+  const contextValue = { allSongs };
   return (
-    <div>
-      <SignUpPage />
-      <SignInPage />
-      <ReactPlayer controls url={source} />
-      <InputPage onSubmit={getSongAndTitle} />
-      <Save onSave={saveSongAndTitle} />
-      <PlaylistInputPage onSubmit={createPlaylist} />
-      {/* /* <LeftMenu /> */}
-      <form onSubmit={handleSignOut}>
-        <button type="submit">Sign out</button>
-      </form>
-      <SavedSongs allSongsArray={allSongs} />
-      <SavedPlaylists allPlaylistsArray={allPlaylists} />
-    </div>
+    <UserProvider value={contextValue}>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <LeftMenu
+              handlePlaylists={getAllPlaylists}
+              handleSongs={getAllSongs}
+            />
+          }>
+          <Route path="/sign-up" element={<SignUpPage />} />
+          <Route path="/sign-in" element={<SignInPage />} />
+          <Route
+            path="/player"
+            element={<MediaPlayer saveVideo={saveSongAndTitle} url={source} />}
+          />
+          <Route index element={<InputPage onSubmit={getSongAndTitle} />} />
+          <Route
+            path="/save-playlist"
+            element={<PlaylistInputPage onSubmit={createPlaylist} />}
+          />
+          <Route
+            path="/saved-songs"
+            element={
+              <SavedSongs
+                handleSource={(url) => {
+                  setSource(url);
+                  navigate('/player');
+                }}
+                handleSave={(songId) => {
+                  selectPlaylistToSave(songId);
+                  console.log(songId);
+                }}
+                allSongsArray={allSongs}
+              />
+            }
+          />
+          <Route
+            path="/saved-playlists"
+            element={
+              <SavedPlaylists
+                handleDisplay={(Id) => {
+                  displaySelectedPlaylist(Id);
+                }}
+                handleSave={(Id) => {
+                  saveSongToPlaylist(henry, Id);
+                }}
+                allPlaylistsArray={allPlaylists}
+              />
+            }
+          />
+          <Route
+            path="/display-playlist"
+            element={
+              <DisplayPlaylists
+                handleSource={(url) => {
+                  setSource(url);
+                  navigate('/player');
+                }}
+                allSongsArray={displayPlaylist}
+              />
+            }
+          />
+        </Route>
+      </Routes>
+    </UserProvider>
   );
 }

@@ -1,6 +1,8 @@
 import { FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export function SignInPage() {
+  const navigate = useNavigate();
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     try {
@@ -27,8 +29,12 @@ export function SignInPage() {
     <div>
       <div>
         <h1>Mexel</h1>
-        <button type="button">Sign up</button>
-        <button type="button">Log in</button>
+        <button onClick={() => navigate('/sign-up')} type="button">
+          Sign up
+        </button>
+        <button onClick={() => navigate('/sign-in')} type="button">
+          Log in
+        </button>
       </div>
       <form onSubmit={handleSubmit}>
         <label htmlFor="username">Username</label>
@@ -36,7 +42,15 @@ export function SignInPage() {
         <label htmlFor="password">Password</label>
         <input required type="password" name="password" />
         <button type="submit">Sign in</button>
-        <p>Don't have an account? Sign up here</p>
+        <p>
+          Don't have an account?
+          <a
+            onClick={() => {
+              navigate('/sign-up');
+            }}>
+            Sign up here
+          </a>
+        </p>
       </form>
     </div>
   );
