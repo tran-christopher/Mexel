@@ -208,71 +208,77 @@ export function Mexel() {
 
   const contextValue = { allSongs };
   return (
-    <UserProvider value={contextValue}>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <LeftMenu
-              handlePlaylists={getAllPlaylists}
-              handleSongs={getAllSongs}
-            />
-          }>
-          <Route path="/sign-up" element={<SignUpPage />} />
-          <Route path="/sign-in" element={<SignInPage />} />
-          <Route
-            path="/player"
-            element={<MediaPlayer saveVideo={saveSongAndTitle} url={source} />}
-          />
-          <Route index element={<InputPage onSubmit={getSongAndTitle} />} />
-          <Route
-            path="/save-playlist"
-            element={<PlaylistInputPage onSubmit={createPlaylist} />}
-          />
-          <Route
-            path="/saved-songs"
-            element={
-              <SavedSongs
-                handleSource={(url) => {
-                  setSource(url);
-                  navigate('/player');
-                }}
-                handleSave={(songId) => {
-                  selectPlaylistToSave(songId);
-                  console.log(songId);
-                }}
-                allSongsArray={allSongs}
+    <div className="text-white bg-black">
+      <div className="">
+        <UserProvider value={contextValue}>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <LeftMenu
+                  handlePlaylists={getAllPlaylists}
+                  handleSongs={getAllSongs}
+                />
+              }>
+              <Route path="/sign-up" element={<SignUpPage />} />
+              <Route path="/sign-in" element={<SignInPage />} />
+              <Route
+                path="/player"
+                element={
+                  <MediaPlayer saveVideo={saveSongAndTitle} url={source} />
+                }
               />
-            }
-          />
-          <Route
-            path="/saved-playlists"
-            element={
-              <SavedPlaylists
-                handleDisplay={(Id) => {
-                  displaySelectedPlaylist(Id);
-                }}
-                handleSave={(Id) => {
-                  saveSongToPlaylist(henry, Id);
-                }}
-                allPlaylistsArray={allPlaylists}
+              <Route index element={<InputPage onSubmit={getSongAndTitle} />} />
+              <Route
+                path="/save-playlist"
+                element={<PlaylistInputPage onSubmit={createPlaylist} />}
               />
-            }
-          />
-          <Route
-            path="/display-playlist"
-            element={
-              <DisplayPlaylists
-                handleSource={(url) => {
-                  setSource(url);
-                  navigate('/player');
-                }}
-                allSongsArray={displayPlaylist}
+              <Route
+                path="/saved-songs"
+                element={
+                  <SavedSongs
+                    handleSource={(url) => {
+                      setSource(url);
+                      navigate('/player');
+                    }}
+                    handleSave={(songId) => {
+                      selectPlaylistToSave(songId);
+                      console.log(songId);
+                    }}
+                    allSongsArray={allSongs}
+                  />
+                }
               />
-            }
-          />
-        </Route>
-      </Routes>
-    </UserProvider>
+              <Route
+                path="/saved-playlists"
+                element={
+                  <SavedPlaylists
+                    handleDisplay={(Id) => {
+                      displaySelectedPlaylist(Id);
+                    }}
+                    handleSave={(Id) => {
+                      saveSongToPlaylist(henry, Id);
+                    }}
+                    allPlaylistsArray={allPlaylists}
+                  />
+                }
+              />
+              <Route
+                path="/display-playlist"
+                element={
+                  <DisplayPlaylists
+                    handleSource={(url) => {
+                      setSource(url);
+                      navigate('/player');
+                    }}
+                    allSongsArray={displayPlaylist}
+                  />
+                }
+              />
+            </Route>
+          </Routes>
+        </UserProvider>
+      </div>
+    </div>
   );
 }

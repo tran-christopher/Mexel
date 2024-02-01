@@ -20,6 +20,8 @@ export function SignInPage() {
       const user = await response.json();
       localStorage.setItem('user signed in', `${user.user.userId}`);
       console.log(`Signed in: ${JSON.stringify(user)}`);
+      alert('You are now signed in!');
+      navigate('/');
     } catch (error) {
       console.error(error);
     }

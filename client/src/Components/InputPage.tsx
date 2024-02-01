@@ -15,10 +15,11 @@ export function InputPage({ onSubmit }: InputPageProps) {
   }
 
   return (
-    <div>
+    <div className="">
       <form onSubmit={handleConvert}>
         <p>Paste your link below!</p>
         <input
+          className=""
           required
           type="text"
           placeholder="Your link here"
