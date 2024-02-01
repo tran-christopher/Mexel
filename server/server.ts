@@ -111,22 +111,23 @@ app.post('/api/video', async (req, res, next) => {
     if (!url) {
       throw new ClientError(400, 'please provide a valid link');
     }
-    const getId = url.split('=');
-    const infoObject = await fetch(
-      `https://youtube.googleapis.com/youtube/v3/videos?part=snippet&id=${getId[1]}&key=${process.env.YOUTUBE_API_KEY}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-    if (!infoObject) {
-      throw new Error(`google api fetch error `);
-    }
-    const data = await infoObject.json();
-    const videoData = [url, data.items[0].snippet.title, userId];
-    res.status(201).json(videoData);
+    // const getId = url.split('=');
+    // // const infoObject = await fetch(
+    // //   `https://youtube.googleapis.com/youtube/v3/videos?part=snippet&id=${getId[1]}&key=${process.env.YOUTUBE_API_KEY}`,
+    // //   {
+    // //     method: 'GET',
+    // //     headers: {
+    // //       'Content-Type': 'application/json',
+    // //     },
+    //   }
+    // );
+    // if (!infoObject) {
+    //   throw new Error(`google api fetch error `);
+    // }
+    // const data = await infoObject.json();
+    // const videoData = [url, data.items[0].snippet.title, userId];
+    // res.status(201).json(videoData);
+    res.status(200);
   } catch (error) {
     console.error(error);
   }

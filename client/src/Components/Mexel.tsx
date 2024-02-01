@@ -50,6 +50,7 @@ export function Mexel() {
       setSource(data[0]);
       setVideo(data);
       navigate('/player');
+      console.log('testing');
     } catch (error) {
       console.error(error);
     }
