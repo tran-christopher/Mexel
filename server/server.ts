@@ -244,32 +244,13 @@ app.post('/api/display-selected-playlist', async (req, res, next) => {
     const sql = `
           select *
           from "PlaylistSongs"
+          join "Songs" using ("songId")
           where "playlistId" = $1
           `;
     const params = [Id];
     const result = await db.query(sql, params);
     const playlistSongs = result.rows;
     res.status(201).json(playlistSongs);
-  } catch (error) {
-    console.error(error);
-  }
-});
-
-app.post('api/display-playlist-songs', async (req, res, next) => {
-  try {
-    const [songId] = req.body;
-    if (!songId) {
-      throw new Error(`error getting songId`);
-    }
-    const sql = `
-          select *
-          from "Songs"
-          where "songId" = $1
-          `;
-    const params = [songId];
-    const result = await db.query(sql, params);
-    const [song] = result.rows;
-    res.status(201).json(song);
   } catch (error) {
     console.error(error);
   }

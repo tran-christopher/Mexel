@@ -22,6 +22,10 @@ export function Mexel() {
   const [displayPlaylist, setDisplayPlaylist] = useState<PlaylistSong[]>([]);
   const [displaySongs, setDisplaySongs] = useState([]);
 
+  useEffect(() => {
+    console.log(displayPlaylist), [displayPlaylist];
+  });
+
   async function getSongAndTitle(linkToConvert: string) {
     try {
       const song = {
@@ -176,7 +180,6 @@ export function Mexel() {
       );
       setAllPlaylists(data);
       console.log(data);
-      return data;
     } catch (error) {
       console.error(error);
     }
@@ -197,31 +200,7 @@ export function Mexel() {
       }
       const data = await response.json();
       setDisplayPlaylist(data);
-      console.log(displayPlaylist);
       navigate('/display-playlist');
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  async function displayPlaylistSongs() {
-    try {
-      console.log(displayPlaylist);
-      for (let i = 0; i < displayPlaylist.length; i++) {
-        console.log('is this working');
-        const response = await fetch('api/display-playlist-songs', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'text/plain',
-          },
-          body: displayPlaylist[i].songId.toString(),
-        });
-        if (!response.ok) {
-          throw new Error(`fetch error ${response.status}`);
-        }
-        const data = await response.json();
-        console.log(data);
-      }
     } catch (error) {
       console.error(error);
     }
