@@ -1,14 +1,14 @@
 import { ListSong } from './ListSong';
 import { useUser } from './useUser';
 
-type Song = {
+export type Song = {
   songId: number;
   userId: number;
   title: string;
   url: string;
 };
 
-type SavedSongsProps = {
+export type SavedSongsProps = {
   allSongsArray: Song[];
   handleSource: (url) => void;
   handleSave: (Id) => void;

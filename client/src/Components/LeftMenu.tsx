@@ -9,10 +9,10 @@ export function LeftMenu({ handleSongs, handlePlaylists }: LeftMenuProps) {
   return (
     <div>
       <Link to="/">Home</Link>
-      <Link to="/">Convert a link</Link>
+      <Link to="/sign-in">Login</Link>
+      <Link to="/sign-up">Sign up</Link>
       <div>
-        <Link to="">Library</Link>
-        <p>Search</p>
+        <p>Library</p>
         <Link onClick={handleSongs} to="/saved-songs">
           All songs
         </Link>

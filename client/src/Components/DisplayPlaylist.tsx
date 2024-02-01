@@ -1,18 +1,27 @@
-export type PlaylistSong = {
-  songId: number;
-  playlistId: number;
-};
+import { ListDisplayPlaylist } from './ListDisplayPlaylist';
+import { Song } from './SavedSongs';
 
-type DisplayPlaylistsProps = {
-  songsToDisplayArray: PlaylistSong[];
+export type DisplayPlaylistsProps = {
+  allSongsArray: Song[];
+  handleSource: (url) => void;
 };
 
 export function DisplayPlaylists({
-  songsToDisplayArray,
+  allSongsArray,
+  handleSource,
 }: DisplayPlaylistsProps) {
-  console.log(songsToDisplayArray);
-  const songsToDisplay = songsToDisplayArray.map((song) => {
-    return <li key={song.songId}>hello{song.songId}</li>;
+  console.log(allSongsArray);
+  const songsToDisplay = allSongsArray.map((song) => {
+    return (
+      <li key={song.songId}>
+        <ListDisplayPlaylist
+          title={song.title}
+          onClick={() => {
+            handleSource(song.url);
+          }}
+        />
+      </li>
+    );
   });
   return (
     <div>

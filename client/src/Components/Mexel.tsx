@@ -9,7 +9,7 @@ import { PlaylistInputPage } from './PlaylistInputPage';
 import { MediaPlayer } from './MediaPlayer';
 import { useEffect, useState } from 'react';
 import { UserProvider, VideoData } from './AppContext';
-import { PlaylistSong, DisplayPlaylists } from './DisplayPlaylist';
+import { DisplayPlaylists } from './DisplayPlaylist';
 
 export function Mexel() {
   const navigate = useNavigate();
@@ -19,8 +19,7 @@ export function Mexel() {
   const [allSongs, setAllSongs] = useState<VideoData[]>([]);
   const [allPlaylists, setAllPlaylists] = useState([]);
   const [henry, setHenry] = useState(0);
-  const [displayPlaylist, setDisplayPlaylist] = useState<PlaylistSong[]>([]);
-  const [displaySongs, setDisplaySongs] = useState([]);
+  const [displayPlaylist, setDisplayPlaylist] = useState([]);
 
   useEffect(() => {
     console.log(displayPlaylist), [displayPlaylist];
@@ -261,7 +260,15 @@ export function Mexel() {
           />
           <Route
             path="/display-playlist"
-            element={<DisplayPlaylists songsToDisplayArray={displayPlaylist} />}
+            element={
+              <DisplayPlaylists
+                handleSource={(url) => {
+                  setSource(url);
+                  navigate('/player');
+                }}
+                allSongsArray={displayPlaylist}
+              />
+            }
           />
         </Route>
       </Routes>

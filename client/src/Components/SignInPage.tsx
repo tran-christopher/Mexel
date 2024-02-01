@@ -42,7 +42,15 @@ export function SignInPage() {
         <label htmlFor="password">Password</label>
         <input required type="password" name="password" />
         <button type="submit">Sign in</button>
-        <p>Don't have an account? Sign up here</p>
+        <p>
+          Don't have an account?
+          <a
+            onClick={() => {
+              navigate('/sign-up');
+            }}>
+            Sign up here
+          </a>
+        </p>
       </form>
     </div>
   );
