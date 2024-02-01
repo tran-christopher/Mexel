@@ -31,7 +31,6 @@ export function SavedSongs({ handleSource, handleSave }: SavedSongsProps) {
       </li>
     );
   });
-  console.log('allSongs', allSongs);
   return (
     <div>
       <h1>Songs</h1>

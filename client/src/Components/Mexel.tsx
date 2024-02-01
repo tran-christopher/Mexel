@@ -2,14 +2,14 @@ import { Routes, Route, useNavigate } from 'react-router-dom';
 import { SignInPage } from './SignInPage';
 import { SignUpPage } from './SignUpPage';
 import { InputPage } from './InputPage';
-import { Save } from './Save';
 import { LeftMenu } from './LeftMenu';
 import { SavedSongs } from './SavedSongs';
 import { SavedPlaylists } from './SavedPlaylists';
 import { PlaylistInputPage } from './PlaylistInputPage';
 import { MediaPlayer } from './MediaPlayer';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { UserProvider, VideoData } from './AppContext';
+import { PlaylistSong, DisplayPlaylists } from './DisplayPlaylist';
 
 export function Mexel() {
   const navigate = useNavigate();
@@ -18,6 +18,9 @@ export function Mexel() {
   const [newPlaylistName, setNewPlaylistName] = useState({});
   const [allSongs, setAllSongs] = useState<VideoData[]>([]);
   const [allPlaylists, setAllPlaylists] = useState([]);
+  const [henry, setHenry] = useState(0);
+  const [displayPlaylist, setDisplayPlaylist] = useState<PlaylistSong[]>([]);
+  const [displaySongs, setDisplaySongs] = useState([]);
 
   async function getSongAndTitle(linkToConvert: string) {
     try {
@@ -26,13 +29,12 @@ export function Mexel() {
         url: '',
         title: '',
       };
-      console.log(`this is the link: ${linkToConvert}`);
       const userId = localStorage.getItem('user signed in');
       song.userId =
         userId !== null ? userId : 'userId was not captured as expected';
       song.url = linkToConvert;
       const response = await fetch('/api/video', {
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -42,9 +44,9 @@ export function Mexel() {
         throw new Error(`fetch error ${response.status}`);
       }
       const data = await response.json();
-      console.log(data);
       setSource(data[0]);
       setVideo(data);
+      navigate('/player');
     } catch (error) {
       console.error(error);
     }
@@ -60,7 +62,6 @@ export function Mexel() {
       playlist.userId =
         userId !== null ? userId : 'userId was not captured as expected';
       playlist.title = playlistName;
-      console.log(`this is the playlist name ${JSON.stringify(playlist)}`);
       const response = await fetch('/api/create-playlist', {
         method: 'POST',
         headers: {
@@ -73,7 +74,7 @@ export function Mexel() {
       }
       const data = await response.json();
       setNewPlaylistName(data);
-      console.log(newPlaylistName);
+      console.log(`Playlist created: ${newPlaylistName}`);
     } catch (error) {
       console.error(error);
     }
@@ -98,8 +99,36 @@ export function Mexel() {
     }
   }
 
-  async function saveSongToPlaylist() {
+  async function selectPlaylistToSave(songId) {
+    setHenry(songId);
+    navigate('/saved-playlists');
     try {
+      getAllPlaylists();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function saveSongToPlaylist(songId, playlistId) {
+    try {
+      const reqObject = {
+        songId,
+        playlistId,
+      };
+      const response = await fetch('/api/saving-to-playlists', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reqObject),
+      });
+      if (!response.ok) {
+        throw new Error(`fetch error ${response.status}`);
+      }
+      const data = await response.json();
+      console.log(`Saved to database ${JSON.stringify(data)}`);
+      alert(`Saved to playlist!`);
+      navigate('/saved-songs');
     } catch (error) {
       console.error(error);
     }
@@ -109,8 +138,6 @@ export function Mexel() {
     try {
       setAllSongs([]);
       const userId = localStorage.getItem('user signed in');
-      console.log(userId);
-      console.log(typeof userId);
       const response = await fetch('/api/get-all-songs', {
         method: 'POST',
         headers: {
@@ -122,7 +149,7 @@ export function Mexel() {
         throw new Error(`fetch error ${response.status}`);
       }
       const data = await response.json();
-      console.log(`songs retrieved, wowow! ${JSON.stringify(data)}`);
+      console.log(`Saved videos retrieved ${JSON.stringify(data)}`);
       setAllSongs(data);
     } catch (error) {
       console.error(error);
@@ -148,6 +175,53 @@ export function Mexel() {
         `playlists retrieved congratulations! ${JSON.stringify(data)}`
       );
       setAllPlaylists(data);
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function displaySelectedPlaylist(Id) {
+    try {
+      setDisplayPlaylist([]);
+      const response = await fetch('/api/display-selected-playlist', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain',
+        },
+        body: Id,
+      });
+      if (!response.ok) {
+        throw new Error(`fetch error ${response.status}`);
+      }
+      const data = await response.json();
+      setDisplayPlaylist(data);
+      console.log(displayPlaylist);
+      navigate('/display-playlist');
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function displayPlaylistSongs() {
+    try {
+      console.log(displayPlaylist);
+      for (let i = 0; i < displayPlaylist.length; i++) {
+        console.log('is this working');
+        const response = await fetch('api/display-playlist-songs', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'text/plain',
+          },
+          body: displayPlaylist[i].songId.toString(),
+        });
+        if (!response.ok) {
+          throw new Error(`fetch error ${response.status}`);
+        }
+        const data = await response.json();
+        console.log(data);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -167,9 +241,11 @@ export function Mexel() {
           }>
           <Route path="/sign-up" element={<SignUpPage />} />
           <Route path="/sign-in" element={<SignInPage />} />
-          <Route path="/player" element={<MediaPlayer url={source} />} />
+          <Route
+            path="/player"
+            element={<MediaPlayer saveVideo={saveSongAndTitle} url={source} />}
+          />
           <Route index element={<InputPage onSubmit={getSongAndTitle} />} />
-          <Route path="/save" element={<Save onSave={saveSongAndTitle} />} />
           <Route
             path="/save-playlist"
             element={<PlaylistInputPage onSubmit={createPlaylist} />}
@@ -182,14 +258,31 @@ export function Mexel() {
                   setSource(url);
                   navigate('/player');
                 }}
-                handleSave={() => {}}
+                handleSave={(songId) => {
+                  selectPlaylistToSave(songId);
+                  console.log(songId);
+                }}
                 allSongsArray={allSongs}
               />
             }
           />
           <Route
             path="/saved-playlists"
-            element={<SavedPlaylists allPlaylistsArray={allPlaylists} />}
+            element={
+              <SavedPlaylists
+                handleDisplay={(Id) => {
+                  displaySelectedPlaylist(Id);
+                }}
+                handleSave={(Id) => {
+                  saveSongToPlaylist(henry, Id);
+                }}
+                allPlaylistsArray={allPlaylists}
+              />
+            }
+          />
+          <Route
+            path="/display-playlist"
+            element={<DisplayPlaylists songsToDisplayArray={displayPlaylist} />}
           />
         </Route>
       </Routes>

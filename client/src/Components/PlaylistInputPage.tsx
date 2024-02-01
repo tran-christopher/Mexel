@@ -1,4 +1,5 @@
 import { FormEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 type PlaylistInputPageProps = {
   onSubmit: (newPlaylist) => void;
@@ -6,12 +7,14 @@ type PlaylistInputPageProps = {
 
 export function PlaylistInputPage({ onSubmit }: PlaylistInputPageProps) {
   const [name, setName] = useState('');
+  const navigate = useNavigate();
 
   function handleCreate(event: FormEvent) {
     event.preventDefault();
     const playlistTitle = name;
     onSubmit(playlistTitle);
     setName('');
+    navigate('/saved-playlists');
   }
 
   return (

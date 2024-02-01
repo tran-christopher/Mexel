@@ -1,3 +1,5 @@
+import { ListPlaylist } from './ListPlaylist';
+
 type Playlist = {
   playlistId: number;
   title: string;
@@ -6,11 +8,29 @@ type Playlist = {
 
 type SavedPlaylistsProps = {
   allPlaylistsArray: Playlist[];
+  handleDisplay: (Id) => void;
+  handleSave: (Id) => void;
 };
 
-export function SavedPlaylists({ allPlaylistsArray }: SavedPlaylistsProps) {
+export function SavedPlaylists({
+  allPlaylistsArray,
+  handleDisplay,
+  handleSave,
+}: SavedPlaylistsProps) {
   const allPlaylists = allPlaylistsArray.map((playlist) => {
-    return <li key={playlist.playlistId}>{playlist.title}</li>;
+    return (
+      <li key={playlist.playlistId}>
+        <ListPlaylist
+          title={playlist.title}
+          onClick={() => {
+            handleDisplay(playlist.playlistId);
+          }}
+          onSave={() => {
+            handleSave(playlist.playlistId);
+          }}
+        />
+      </li>
+    );
   });
   return (
     <div>

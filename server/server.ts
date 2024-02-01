@@ -105,7 +105,7 @@ app.post('/api/sign-in', async (req, res, next) => {
 // test link
 // http://www.youtube.com/watch?v=a0XEsck5ntk
 
-app.get('/api/video', async (req, res, next) => {
+app.post('/api/video', async (req, res, next) => {
   try {
     const { url, userId } = req.body;
     if (!url) {
@@ -172,27 +172,6 @@ app.post('/api/save', async (req, res, next) => {
   } catch (error) {}
 });
 
-app.post('/api/save-to-playlist', async (req, res, next) => {
-  try {
-    const [songId] = req.body;
-    if (!songId) {
-      throw new Error('song is not saved!');
-    }
-    const sql = `
-          insert into "PlaylistSongs" ("songId")
-          values ($1)
-          returning *
-          `;
-    const params = [songId];
-    const result = await db.query(sql, params);
-    const [savedSong] = result.rows;
-    res.status(201).json(savedSong);
-    console.log('video added to playlist!');
-  } catch (error) {
-    console.error(error);
-  }
-});
-
 app.post('/api/get-all-songs', async (req, res, next) => {
   try {
     const [userId] = req.body;
@@ -230,6 +209,67 @@ app.post('/api/get-all-playlists', async (req, res, next) => {
     const allPlaylists = result.rows;
     res.status(201).json(allPlaylists);
     console.log(`All playlists for userId:${userId} retrieved!`);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+app.post('/api/saving-to-playlists', async (req, res, next) => {
+  try {
+    const { songId, playlistId } = req.body;
+    if (!songId || !playlistId) {
+      throw new Error(`error: song not saved`);
+    }
+    const sql = `
+          insert into "PlaylistSongs" ("songId", "playlistId")
+          values ($1, $2)
+          returning *
+          `;
+    const params = [songId, playlistId];
+    const result = await db.query(sql, params);
+    const [videoAdded] = result.rows;
+    res.status(201).json(videoAdded);
+    console.log('video saved to playlist');
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+app.post('/api/display-selected-playlist', async (req, res, next) => {
+  try {
+    const [Id] = req.body;
+    if (!Id) {
+      throw new Error(`error: no playlist id received`);
+    }
+    const sql = `
+          select *
+          from "PlaylistSongs"
+          where "playlistId" = $1
+          `;
+    const params = [Id];
+    const result = await db.query(sql, params);
+    const playlistSongs = result.rows;
+    res.status(201).json(playlistSongs);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+app.post('api/display-playlist-songs', async (req, res, next) => {
+  try {
+    const [songId] = req.body;
+    if (!songId) {
+      throw new Error(`error getting songId`);
+    }
+    const sql = `
+          select *
+          from "Songs"
+          where "songId" = $1
+          `;
+    const params = [songId];
+    const result = await db.query(sql, params);
+    const [song] = result.rows;
+    res.status(201).json(song);
   } catch (error) {
     console.error(error);
   }
