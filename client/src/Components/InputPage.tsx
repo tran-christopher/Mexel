@@ -15,20 +15,27 @@ export function InputPage({ onSubmit }: InputPageProps) {
   }
 
   return (
-    <div className="">
+    <div className="flex flex-col">
       <form onSubmit={handleConvert}>
-        <p>Paste your link below!</p>
-        <input
-          className=""
-          required
-          type="text"
-          placeholder="Your link here"
-          value={url}
-          onChange={(e) => {
-            setUrl(e.target.value);
-          }}
-        />
-        <button type="submit">Convert</button>
+        <div className="p-2">
+          <p className="">Paste your link below!</p>
+        </div>
+        <div className="p-2">
+          <input
+            name="link"
+            className=""
+            required
+            type="text"
+            placeholder="Your link here"
+            value={url}
+            onChange={(e) => {
+              setUrl(e.target.value);
+            }}
+          />
+        </div>
+        <div>
+          <button type="submit">Play</button>
+        </div>
       </form>
     </div>
   );

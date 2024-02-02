@@ -208,7 +208,7 @@ export function Mexel() {
 
   const contextValue = { allSongs };
   return (
-    <div className="text-white bg-black">
+    <div className="text-white bg-black font-sans">
       <div className="">
         <UserProvider value={contextValue}>
           <Routes>
