@@ -36,7 +36,7 @@ export function SignUpPage() {
         <div>
           <input placeholder="username" required type="text" name="username" />
         </div>
-        <div>
+        <div className="p-2">
           <label className="text-white pr-28" htmlFor="password">
             Password
           </label>
