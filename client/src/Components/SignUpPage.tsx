@@ -26,32 +26,45 @@ export function SignUpPage() {
   }
 
   return (
-    <div>
-      <div>
-        <h1>Mexel</h1>
-        <button onClick={() => navigate('/sign-up')} type="button">
-          Sign up
-        </button>
-        <button onClick={() => navigate('/sign-in')} type="button">
-          Log in
-        </button>
+    <form onSubmit={handleSubmit}>
+      <div className="flex flex-col">
+        <div className="p-2">
+          <label className="text-white pr-28" htmlFor="username">
+            Username
+          </label>
+        </div>
+        <div>
+          <input placeholder="username" required type="text" name="username" />
+        </div>
+        <div>
+          <label className="text-white pr-28" htmlFor="password">
+            Password
+          </label>
+        </div>
+        <div>
+          <input
+            placeholder="password"
+            required
+            type="password"
+            name="password"
+          />
+        </div>
+        <div className="text-white p-2">
+          <button className="hover:text-blue-600" type="submit">
+            Sign Up
+          </button>
+          <p className="p-10">
+            Already have an account?
+            <a
+              className="block hover:cursor-pointer hover:text-blue-600"
+              onClick={() => {
+                navigate('/sign-in');
+              }}>
+              Sign in here
+            </a>
+          </p>
+        </div>
       </div>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="username">Username</label>
-        <input required type="text" name="username" />
-        <label htmlFor="password">Password</label>
-        <input required type="password" name="password" />
-        <button type="submit">Sign Up</button>
-        <p>
-          Already have an account?
-          <a
-            onClick={() => {
-              navigate('/sign-in');
-            }}>
-            Sign in here
-          </a>
-        </p>
-      </form>
-    </div>
+    </form>
   );
 }

@@ -98,6 +98,8 @@ export function Mexel() {
       }
       const data = await response.json();
       console.log(`video saved successfully! ${data}`);
+      alert(`Video saved!`);
+      navigate('/');
     } catch (error) {
       console.error(error);
     }
@@ -208,7 +210,7 @@ export function Mexel() {
 
   const contextValue = { allSongs };
   return (
-    <div className="text-white bg-black font-sans">
+    <div className="bg-black font-sans">
       <div className="">
         <UserProvider value={contextValue}>
           <Routes>

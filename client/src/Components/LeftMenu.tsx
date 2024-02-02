@@ -9,19 +9,19 @@ export function LeftMenu({ handleSongs, handlePlaylists }: LeftMenuProps) {
   return (
     <div className="flex">
       {/* left panel */}
-      <div className="flex flex-col bg-black justify-center h-screen w-1/3">
+      <div className="flex text-white flex-col bg-black justify-center h-screen w-1/3">
         <div className="self-start">
           <h1 className="p-5 text-3xl">Mexel</h1>
         </div>
         <div className="flex flex-col h-full w-full justify-evenly">
           <div className="self-center flex flex-col">
-            <Link className="p-2" to="/">
+            <Link className="p-2 hover:text-blue-600" to="/">
               Home
             </Link>
-            <Link className="p-2" to="/sign-in">
+            <Link className="p-2 hover:text-blue-600" to="/sign-in">
               Login
             </Link>
-            <Link className="p-2" to="/sign-up">
+            <Link className="p-2 hover:text-blue-600" to="/sign-up">
               Sign up
             </Link>
           </div>
@@ -29,11 +29,14 @@ export function LeftMenu({ handleSongs, handlePlaylists }: LeftMenuProps) {
             <p className="pl-5 text-xl">Library</p>
           </div>
           <div className="self-center flex flex-col">
-            <Link className="p-1" onClick={handleSongs} to="/saved-songs">
-              All songs
+            <Link
+              className="p-1 hover:text-blue-600"
+              onClick={handleSongs}
+              to="/saved-songs">
+              All videos
             </Link>
             <Link
-              className="p-1"
+              className="p-1 hover:text-blue-600"
               onClick={handlePlaylists}
               to="/saved-playlists">
               Playlists
