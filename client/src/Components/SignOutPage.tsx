@@ -6,11 +6,19 @@ export function SignOutPage() {
   function handleSignOut(event: FormEvent) {
     event.preventDefault();
     localStorage.clear();
+    alert('You are now signed out');
     navigate('/');
   }
   return (
-    <form onSubmit={handleSignOut}>
-      <button type="submit">Sign out</button>
-    </form>
+    <button
+      onClick={handleSignOut}
+      className={
+        localStorage.getItem('user signed in')
+          ? 'p-2 hover:text-blue-600'
+          : 'hidden'
+      }>
+      {' '}
+      Sign out
+    </button>
   );
 }

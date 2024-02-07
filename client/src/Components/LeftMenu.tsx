@@ -1,4 +1,5 @@
 import { Link, Outlet } from 'react-router-dom';
+import { SignOutPage } from './SignOutPage';
 
 type LeftMenuProps = {
   handleSongs: () => void;
@@ -18,10 +19,23 @@ export function LeftMenu({ handleSongs, handlePlaylists }: LeftMenuProps) {
             <Link className="p-2 hover:text-blue-600" to="/">
               Home
             </Link>
-            <Link className="p-2 hover:text-blue-600" to="/sign-in">
+            <SignOutPage />
+            <Link
+              className={
+                localStorage.getItem('user signed in')
+                  ? 'hidden'
+                  : 'p-2 hover:text-blue-600'
+              }
+              to="/sign-in">
               Login
             </Link>
-            <Link className="p-2 hover:text-blue-600" to="/sign-up">
+            <Link
+              className={
+                localStorage.getItem('user signed in')
+                  ? 'hidden'
+                  : 'p-2 hover:text-blue-600'
+              }
+              to="/sign-up">
               Sign up
             </Link>
           </div>
