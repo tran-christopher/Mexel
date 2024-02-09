@@ -7,7 +7,7 @@ import { SavedSongs } from './SavedSongs';
 import { SavedPlaylists } from './SavedPlaylists';
 import { PlaylistInputPage } from './PlaylistInputPage';
 import { MediaPlayer } from './MediaPlayer';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { UserProvider, VideoData } from './AppContext';
 import { DisplayPlaylists } from './DisplayPlaylist';
 
@@ -20,10 +20,6 @@ export function Mexel() {
   const [allPlaylists, setAllPlaylists] = useState([]);
   const [henry, setHenry] = useState(0);
   const [displayPlaylist, setDisplayPlaylist] = useState([]);
-
-  useEffect(() => {
-    console.log(displayPlaylist), [displayPlaylist];
-  });
 
   // takes userId of user and input url, sends to google API
 
