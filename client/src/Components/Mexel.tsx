@@ -21,8 +21,6 @@ export function Mexel() {
   const [henry, setHenry] = useState(0);
   const [displayPlaylist, setDisplayPlaylist] = useState([]);
 
-  // takes userId of user and input url, sends to google API
-
   async function getSongAndTitle(linkToConvert: string) {
     try {
       const song = {
