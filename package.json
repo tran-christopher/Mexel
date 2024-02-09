@@ -22,17 +22,18 @@
     "deploy": "git push --force origin main:pub"
   },
   "dependencies": {
+    "autoprefixer": "^10.4.17",
     "husky": "^8.0.3",
     "npm-run-all": "^4.1.5",
     "play-dl": "^1.9.7",
+    "postcss": "^8.4.33",
     "react-icons": "^5.0.1",
     "react-player": "^2.14.1",
     "react-router-dom": "^6.21.3",
+    "react-toastify": "^10.0.4",
+    "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.1",
-    "typescript": "^5.1.6",
-    "autoprefixer": "^10.4.17",
-    "postcss": "^8.4.33",
-    "tailwindcss": "^3.4.1"
+    "typescript": "^5.1.6"
   },
   "devDependencies": {
     "@learningfuze/lfz-config": "^1.0.0",

@@ -11,9 +11,13 @@ type MediaPlayerProps = {
 
 export function MediaPlayer({ url, saveVideo }: MediaPlayerProps) {
   return (
-    <div>
-      <ReactPlayer controls url={url} />
-      <Save onSave={saveVideo} />
+    <div className="flex flex-col items-center">
+      <div className="">
+        <ReactPlayer controls url={url} />
+      </div>
+      <div className="text-white">
+        <Save onSave={saveVideo} />
+      </div>
     </div>
   );
 }

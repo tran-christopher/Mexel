@@ -103,8 +103,7 @@ app.post('/api/sign-in', async (req, res, next) => {
   }
 });
 
-// test link
-// http://www.youtube.com/watch?v=a0XEsck5ntk
+// retrieve video info
 
 app.post('/api/video', async (req, res, next) => {
   try {
@@ -171,7 +170,9 @@ app.post('/api/save', async (req, res, next) => {
     const [newVideo] = result.rows;
     res.status(201).json(newVideo);
     console.log('Video added!');
-  } catch (error) {}
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 app.post('/api/get-all-songs', async (req, res, next) => {

@@ -19,7 +19,9 @@ export function SavedPlaylists({
 }: SavedPlaylistsProps) {
   const allPlaylists = allPlaylistsArray.map((playlist) => {
     return (
-      <li key={playlist.playlistId}>
+      <li
+        className="text-left p-2 hover:cursor-pointer"
+        key={playlist.playlistId}>
         <ListPlaylist
           title={playlist.title}
           onClick={() => {
@@ -33,9 +35,13 @@ export function SavedPlaylists({
     );
   });
   return (
-    <div>
-      <h1>Playlists</h1>
-      <ul>{allPlaylists}</ul>
+    <div className="flex flex-col">
+      <div className="self-start">
+        <h1 className="text-white text-3xl pt-5 pl-20 pb-10">Playlists</h1>
+      </div>
+      <div className="self-start">
+        <ul className="text-white pl-20">{allPlaylists}</ul>
+      </div>
     </div>
   );
 }

@@ -25,6 +25,8 @@ export function Mexel() {
     console.log(displayPlaylist), [displayPlaylist];
   });
 
+  // takes userId of user and input url, sends to google API
+
   async function getSongAndTitle(linkToConvert: string) {
     try {
       const song = {
@@ -50,7 +52,6 @@ export function Mexel() {
       setSource(data[0]);
       setVideo(data);
       navigate('/player');
-      console.log('testing');
     } catch (error) {
       console.error(error);
     }
@@ -98,6 +99,8 @@ export function Mexel() {
       }
       const data = await response.json();
       console.log(`video saved successfully! ${data}`);
+      alert(`Video saved!`);
+      navigate('/');
     } catch (error) {
       console.error(error);
     }
@@ -175,11 +178,17 @@ export function Mexel() {
         throw new Error(`fetch error ${response.status}`);
       }
       const data = await response.json();
-      console.log(
-        `playlists retrieved congratulations! ${JSON.stringify(data)}`
-      );
-      setAllPlaylists(data);
-      console.log(data);
+      if (!data[0] === undefined) {
+        console.log(
+          `playlists retrieved congratulations! ${JSON.stringify(data)}`
+        );
+        setAllPlaylists(data);
+        console.log(data);
+      } else {
+        alert('No playlists found');
+        navigate('/');
+        throw new Error('No playlists found');
+      }
     } catch (error) {
       console.error(error);
     }
@@ -208,7 +217,7 @@ export function Mexel() {
 
   const contextValue = { allSongs };
   return (
-    <div className="text-white bg-black">
+    <div className="bg-black font-sans">
       <div className="">
         <UserProvider value={contextValue}>
           <Routes>
