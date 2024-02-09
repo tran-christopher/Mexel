@@ -24,7 +24,6 @@
   "dependencies": {
     "autoprefixer": "^10.4.17",
     "husky": "^8.0.3",
-    "node-fetch": "^3.3.2",
     "npm-run-all": "^4.1.5",
     "play-dl": "^1.9.7",
     "postcss": "^8.4.33",

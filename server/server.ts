@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars -- Remove when used */
 import 'dotenv/config';
+import fetch from 'node-fetch';
 import express from 'express';
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
@@ -120,10 +121,10 @@ app.post('/api/video', async (req, res, next) => {
         },
       }
     );
-    if (!infoObject) {
+    if (!infoObject.ok) {
       throw new Error(`google api fetch error `);
     }
-    const data = await infoObject.json();
+    const data: any = await infoObject.json();
     const videoData = [url, data.items[0].snippet.title, userId];
     res.status(201).json(videoData);
     res.send(200);
