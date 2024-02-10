@@ -1,5 +1,5 @@
-import { ListSong } from './ListSong';
-import { useUser } from './useUser';
+import { ListSong } from '../ListSong';
+import { useUser } from '../useUser';
 
 export type Song = {
   songId: number;

@@ -1,12 +1,12 @@
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import { SignInPage } from './SignInPage';
-import { SignUpPage } from './SignUpPage';
-import { InputPage } from './InputPage';
+import { SignInPage } from './Pages/SignInPage';
+import { SignUpPage } from './Pages/SignUpPage';
+import { InputPage } from './Pages/InputPage';
 import { LeftMenu } from './LeftMenu';
-import { SavedSongs } from './SavedSongs';
-import { SavedPlaylists } from './SavedPlaylists';
-import { PlaylistInputPage } from './PlaylistInputPage';
-import { MediaPlayer } from './MediaPlayer';
+import { SavedSongs } from './Pages/SavedSongs';
+import { SavedPlaylists } from './Pages/SavedPlaylists';
+import { PlaylistInputPage } from './Pages/PlaylistInputPage';
+import { MediaPlayer } from './Pages/MediaPlayer';
 import { useState } from 'react';
 import { UserProvider, VideoData } from './AppContext';
 import { DisplayPlaylists } from './DisplayPlaylist';
@@ -172,7 +172,8 @@ export function Mexel() {
         throw new Error(`fetch error ${response.status}`);
       }
       const data = await response.json();
-      if (!data[0] === undefined) {
+      if (data) {
+        console.log(data);
         console.log(
           `playlists retrieved congratulations! ${JSON.stringify(data)}`
         );
@@ -221,6 +222,9 @@ export function Mexel() {
                 <LeftMenu
                   handlePlaylists={getAllPlaylists}
                   handleSongs={getAllSongs}
+                  createPlaylist={() => {
+                    navigate('/save-playlist');
+                  }}
                 />
               }>
               <Route path="/sign-up" element={<SignUpPage />} />

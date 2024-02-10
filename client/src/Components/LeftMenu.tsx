@@ -1,12 +1,17 @@
 import { Link, Outlet } from 'react-router-dom';
-import { SignOutPage } from './SignOutPage';
+import { SignOutPage } from './Pages/SignOutPage';
 
 type LeftMenuProps = {
   handleSongs: () => void;
   handlePlaylists: () => void;
+  createPlaylist: () => void;
 };
 
-export function LeftMenu({ handleSongs, handlePlaylists }: LeftMenuProps) {
+export function LeftMenu({
+  handleSongs,
+  handlePlaylists,
+  createPlaylist,
+}: LeftMenuProps) {
   return (
     <div className="flex">
       {/* left panel */}
@@ -49,12 +54,30 @@ export function LeftMenu({ handleSongs, handlePlaylists }: LeftMenuProps) {
               to="/saved-songs">
               All videos
             </Link>
-            <Link
-              className="p-1 hover:text-blue-600"
-              onClick={handlePlaylists}
-              to="/saved-playlists">
-              Playlists
-            </Link>
+            <div className="flex">
+              <Link
+                className="p-1 hover:text-blue-600"
+                onClick={handlePlaylists}
+                to="/saved-playlists">
+                Playlists
+              </Link>
+              <button
+                onClick={createPlaylist}
+                className="text-white font-bold py-2 px-4 rounded-full shadow">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-3 w-3 hover:text-blue-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 4v16m8-8H4"></path>
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>

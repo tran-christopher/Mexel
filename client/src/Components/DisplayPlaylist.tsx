@@ -1,5 +1,5 @@
 import { ListDisplayPlaylist } from './ListDisplayPlaylist';
-import { Song } from './SavedSongs';
+import { Song } from './Pages/SavedSongs';
 
 export type DisplayPlaylistsProps = {
   allSongsArray: Song[];

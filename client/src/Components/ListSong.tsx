@@ -7,10 +7,12 @@ type ListSongProps = {
 export function ListSong({ title, onClick, onSave }: ListSongProps) {
   return (
     <div className="flex justify-between">
-      <a onClick={onClick}>{title}</a>
+      <a className="hover:underline" onClick={onClick}>
+        {title}
+      </a>
       <button
         onClick={onSave}
-        className="text-white font-bold py-2 px-4 rounded-full shadow">
+        className="text-white hover:text-blue-600 font-bold py-2 px-4 rounded-full shadow">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-3 w-3"

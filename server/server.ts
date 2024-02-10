@@ -110,9 +110,6 @@ app.post('/api/video', async (req, res, next) => {
       throw new ClientError(400, 'please provide a valid link');
     }
     const getId = url.split('=');
-    console.log(
-      `https://youtube.googleapis.com/youtube/v3/videos?part=snippet&id=${getId[1]}&key=${process.env.YOUTUBE_API_KEY}`
-    );
     const infoObject = await fetch(
       `https://youtube.googleapis.com/youtube/v3/videos?part=snippet&id=${getId[1]}&key=${process.env.YOUTUBE_API_KEY}`,
       {
@@ -122,7 +119,6 @@ app.post('/api/video', async (req, res, next) => {
         },
       }
     );
-    console.log(infoObject);
     if (!infoObject.ok) {
       throw new Error(`google api fetch error `);
     }
