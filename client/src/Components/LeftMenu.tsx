@@ -5,12 +5,14 @@ type LeftMenuProps = {
   handleSongs: () => void;
   handlePlaylists: () => void;
   createPlaylist: () => void;
+  addVideo: () => void;
 };
 
 export function LeftMenu({
   handleSongs,
   handlePlaylists,
   createPlaylist,
+  addVideo,
 }: LeftMenuProps) {
   return (
     <div className="flex">
@@ -56,7 +58,7 @@ export function LeftMenu({
                 All videos
               </Link>
               <button
-                onClick={createPlaylist}
+                onClick={addVideo}
                 className="text-white font-bold py-2 px-4 rounded-full shadow">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

@@ -225,6 +225,9 @@ export function Mexel() {
                   createPlaylist={() => {
                     navigate('/save-playlist');
                   }}
+                  addVideo={() => {
+                    navigate('/');
+                  }}
                 />
               }>
               <Route path="/sign-up" element={<SignUpPage />} />
