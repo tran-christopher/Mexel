@@ -8,8 +8,10 @@ export function ListDisplayPlaylist({
   onClick,
 }: ListDisplayPlaylistProps) {
   return (
-    <div>
-      <a onClick={onClick}>{title}</a>
+    <div className="flex justify-between">
+      <a className="hover:underline" onClick={onClick}>
+        {title}
+      </a>
     </div>
   );
 }

@@ -13,7 +13,7 @@ export function DisplayPlaylists({
   console.log(allSongsArray);
   const songsToDisplay = allSongsArray.map((song) => {
     return (
-      <li key={song.songId}>
+      <li className="text-left p-2 hover:cursor-pointer" key={song.songId}>
         <ListDisplayPlaylist
           title={song.title}
           onClick={() => {
@@ -24,8 +24,13 @@ export function DisplayPlaylists({
     );
   });
   return (
-    <div>
-      <ul>{songsToDisplay}</ul>
+    <div className="flex flex-col">
+      <div className="self-start">
+        <h1 className="text-white text-3xl pl-20 pb-10">Playlist Videos</h1>
+      </div>
+      <div className="self-start">
+        <ul className="text-white pl-20">{songsToDisplay}</ul>
+      </div>
     </div>
   );
 }
