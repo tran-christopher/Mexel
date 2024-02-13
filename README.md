@@ -21,8 +21,10 @@ Mexel is a full-stack web application that allows users to view youtube videos a
 
 ### Technologies Used
 
-Front End: React, TailwindCSS (`<br>`)
-Back End: Node.js, Express (`<br>`)
+Front End: React, TailwindCSS (`<br>`)  
+
+Back End: Node.js, Express (`<br>`)  
+
 Database: PostgreSQL
 
 ---
