@@ -123,9 +123,10 @@ app.post('/api/video', async (req, res, next) => {
       throw new Error(`google api fetch error `);
     }
     const data: any = await infoObject.json();
+    console.log(JSON.stringify(data.items[0].snippet.thumbnails));
     const videoData = [url, data.items[0].snippet.title, userId];
     res.status(201).json(videoData);
-    res.send(200);
+    res.sendStatus(200);
   } catch (error) {
     console.error(error);
   }
