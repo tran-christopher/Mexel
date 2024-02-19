@@ -1,4 +1,4 @@
-import { Save } from '../Save';
+import { Save } from '../Components/Save';
 import React from 'react';
 import { default as _ReactPlayer } from 'react-player/lazy';
 import { ReactPlayerProps } from 'react-player/types/lib';

@@ -1,5 +1,5 @@
 import { Link, Outlet } from 'react-router-dom';
-import { SignOutPage } from './Pages/SignOutPage';
+import { SignOutPage } from '../Pages/SignOutPage';
 
 type LeftMenuProps = {
   handleSongs: () => void;

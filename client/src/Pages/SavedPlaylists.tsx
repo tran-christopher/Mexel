@@ -1,4 +1,4 @@
-import { ListPlaylist } from '../ListPlaylist';
+import { ListPlaylist } from '../Components/ListPlaylist';
 
 type Playlist = {
   playlistId: number;
