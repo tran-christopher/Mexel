@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Banner } from './Banner';
 import { NextButton } from './NextButton';
 import { PrevButton } from './PrevButton';
@@ -14,21 +14,31 @@ type Props = {
 
 export function CarouselWrapper({ images }: Props) {
   const [index, setIndex] = useState(0);
-  const handleCarousel = useCallback(() => {
+  // const thumbnails: string[] = [];
+
+  useEffect(() => {
+    async function carousel() {
+      try {
+        const response = await fetch('/api/carousel');
+        if (!response.ok) {
+          throw new Error(`carousel frontend fetch error`);
+        }
+        const data = await response.json();
+        console.log(JSON.stringify(data));
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    carousel();
+  }, []);
+
+  function handleNext() {
     if (index === 5) {
       setIndex(0);
     } else {
       setIndex(index + 1);
     }
-  }, [index]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      console.log('running');
-      handleCarousel();
-    }, 2500);
-    return () => clearInterval(interval);
-  }, [handleCarousel]);
+  }
 
   function handlePrev() {
     if (index === 0) {
@@ -41,20 +51,19 @@ export function CarouselWrapper({ images }: Props) {
   return (
     <div
       style={{
-        height: '70vh',
+        height: '50%',
         width: '100%',
-        backgroundColor: 'white',
+        backgroundColor: 'rgb(17,24,39)',
       }}>
       <div
         style={{
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          paddingTop: '10%',
         }}>
         <PrevButton onClick={handlePrev} />
         <Banner src={images[index].src} alt={images[index].alt} />
-        <NextButton onClick={handleCarousel} />
+        <NextButton onClick={handleNext} />
       </div>
     </div>
   );
