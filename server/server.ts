@@ -261,7 +261,7 @@ app.post('/api/display-selected-playlist', async (req, res, next) => {
 app.get('/api/carousel', async (req, res, next) => {
   try {
     const response = await fetch(
-      `https://youtube.googleapis.com/youtube/v3/search?part=snippet&chart=mostPopular&key=${process.env.YOUTUBE_API_KEY}`
+      `https://youtube.googleapis.com/youtube/v3/search?part=snippet&chart=mostPopular&maxResults=6&key=${process.env.YOUTUBE_API_KEY}`
     );
     if (!response.ok) {
       throw new Error('carousel backend fetch error');

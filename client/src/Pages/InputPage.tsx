@@ -1,39 +1,33 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useState, useEffect } from 'react';
 import { CarouselWrapper } from '../Components/Carousel/CarouselWrapper';
 
 type InputPageProps = {
   onSubmit: (link: string) => void;
 };
 
-const testImages = [
-  {
-    src: '/images/image 1.jpg',
-    alt: 'image 1',
-  },
-  {
-    src: '/images/image 2.jpg',
-    alt: 'image 2',
-  },
-  {
-    src: '/images/image 3.jpg',
-    alt: 'image 3',
-  },
-  {
-    src: '/images/image 4.jpg',
-    alt: 'image 4',
-  },
-  {
-    src: '/images/image 7.webp',
-    alt: 'image 7',
-  },
-  {
-    src: '/images/image 6.jpg',
-    alt: 'image 6',
-  },
-];
-
 export function InputPage({ onSubmit }: InputPageProps) {
   const [url, setUrl] = useState('');
+  const thumbnails: string[] = [];
+
+  useEffect(() => {
+    async function carousel() {
+      try {
+        const response = await fetch('/api/carousel');
+        if (!response.ok) {
+          throw new Error(`carousel frontend fetch error`);
+        }
+        const data = await response.json();
+        data.items.forEach((element) => {
+          thumbnails.push(element.snippet.thumbnails.high.url);
+          console.log(thumbnails);
+          console.log(element);
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    carousel();
+  }, []);
 
   function handleConvert(event: FormEvent) {
     event.preventDefault();
@@ -45,7 +39,7 @@ export function InputPage({ onSubmit }: InputPageProps) {
   return (
     <div className="flex flex-col">
       <div className="">
-        <CarouselWrapper images={testImages} />
+        <CarouselWrapper images={thumbnails} />
       </div>
       <div className="">
         <form onSubmit={handleConvert}>
