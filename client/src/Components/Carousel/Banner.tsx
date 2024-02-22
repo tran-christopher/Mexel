@@ -7,11 +7,8 @@ export function Banner({ src, alt }: Thumbnail) {
   return (
     <img
       style={{
-        width: '25%',
-        color: 'black',
-        fontSize: '48px',
+        width: '50%',
         marginBottom: '10px',
-        marginTop: '5px',
       }}
       src={src}
       alt={alt}

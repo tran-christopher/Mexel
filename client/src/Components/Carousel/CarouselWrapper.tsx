@@ -29,7 +29,6 @@ export function CarouselWrapper({ images }: Props) {
   return (
     <div
       style={{
-        height: '50%',
         width: '100%',
         backgroundColor: 'rgb(17,24,39)',
       }}>

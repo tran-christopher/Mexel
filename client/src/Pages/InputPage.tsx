@@ -7,7 +7,7 @@ type InputPageProps = {
 
 export function InputPage({ onSubmit }: InputPageProps) {
   const [url, setUrl] = useState('');
-  const thumbnails: string[] = [];
+  const [thumbnails, setThumbnails] = useState<string[]>([]);
 
   useEffect(() => {
     async function carousel() {
@@ -17,11 +17,13 @@ export function InputPage({ onSubmit }: InputPageProps) {
           throw new Error(`carousel frontend fetch error`);
         }
         const data = await response.json();
-        data.items.forEach((element) => {
-          thumbnails.push(element.snippet.thumbnails.high.url);
-          console.log(thumbnails);
+        console.log('running');
+        const thumbnailArray = data.items.map((element) => {
           console.log(element);
+          element.snippet.thumbnails.high.url;
         });
+        console.log('this is the new array', thumbnailArray);
+        setThumbnails(thumbnailArray);
       } catch (error) {
         console.error(error);
       }
@@ -43,10 +45,10 @@ export function InputPage({ onSubmit }: InputPageProps) {
       </div>
       <div className="">
         <form onSubmit={handleConvert}>
-          <div className="p-2">
+          <div className="">
             <p className="text-white">Paste your link below!</p>
           </div>
-          <div className="p-2">
+          <div className="py-2">
             <input
               color="black"
               name="link"
