@@ -17,10 +17,9 @@ export function InputPage({ onSubmit }: InputPageProps) {
           throw new Error(`carousel frontend fetch error`);
         }
         const data = await response.json();
-        console.log('running');
-        const thumbnailArray = data.items.map((element) => {
-          console.log(element);
-          element.snippet.thumbnails.high.url;
+        const thumbnailArray: string[] = [];
+        data.items.forEach((element) => {
+          thumbnailArray.push(element.snippet.thumbnails.high.url);
         });
         console.log('this is the new array', thumbnailArray);
         setThumbnails(thumbnailArray);

@@ -39,7 +39,14 @@ export function CarouselWrapper({ images }: Props) {
           alignItems: 'center',
         }}>
         <PrevButton onClick={handlePrev} />
-        <Banner src={images[index]} alt="error loading thumbnail" />
+        <Banner
+          src={images[index - 1]}
+          alt="error loading thumbnail"
+          srcTwo={images[index]}
+          altTwo="error loading thumbnail two"
+          srcThree={images[index + 1]}
+          altThree="error loading thumbnail three"
+        />
         <NextButton onClick={handleNext} />
       </div>
     </div>
