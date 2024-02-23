@@ -267,7 +267,6 @@ app.get('/api/carousel', async (req, res, next) => {
       throw new Error('carousel backend fetch error');
     }
     const data: any = await response.json();
-    console.log(JSON.stringify(data));
     res.status(201).json(data);
     res.sendStatus(200);
   } catch (error) {

@@ -40,11 +40,11 @@ export function CarouselWrapper({ images }: Props) {
         }}>
         <PrevButton onClick={handlePrev} />
         <Banner
-          src={images[index - 1]}
+          src={images[index]}
           alt="error loading thumbnail"
-          srcTwo={images[index]}
+          srcTwo={images[(index + 1) % images.length]}
           altTwo="error loading thumbnail two"
-          srcThree={images[index + 1]}
+          srcThree={images[(index + 2) % images.length]}
           altThree="error loading thumbnail three"
         />
         <NextButton onClick={handleNext} />
