@@ -37,6 +37,8 @@ export function CarouselWrapper({ images }: Props) {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
+          paddingLeft: '20px',
+          paddingRight: '20px',
         }}>
         <PrevButton onClick={handlePrev} />
         <Banner

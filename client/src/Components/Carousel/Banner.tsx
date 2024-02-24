@@ -16,10 +16,10 @@ export function Banner({
   altThree,
 }: Thumbnails) {
   return (
-    <div className="flex">
+    <div className="flex justify-evenly ">
       <img
         style={{
-          width: '33%',
+          width: '25%',
           marginBottom: '10px',
         }}
         src={src}
@@ -27,7 +27,7 @@ export function Banner({
       />
       <img
         style={{
-          width: '33%',
+          width: '25%',
           marginBottom: '10px',
         }}
         src={srcTwo}
@@ -35,7 +35,7 @@ export function Banner({
       />
       <img
         style={{
-          width: '33%',
+          width: '25%',
           marginBottom: '10px',
         }}
         src={srcThree}
