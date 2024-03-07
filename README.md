@@ -13,9 +13,6 @@ Mexel is a full-stack web application that allows users to view youtube videos a
 
 ---
 
-### Link to site
-
-[Mexel](http://mexel-music-dev.us-west-1.elasticbeanstalk.com/)
 
 ---
 
